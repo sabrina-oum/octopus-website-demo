@@ -1,12 +1,8 @@
 import Image from "next/image";
+import { breakpointMedia } from "@/lib/breakpoints";
 import { cx } from "@/lib/cx";
 
 type AspectRatio = `${number}/${number}`;
-
-const breakpointMedia = {
-  tablet: "(min-width: 50.625rem)",
-  desktop: "(min-width: 75rem)",
-} as const;
 
 type ImageSizes = {
   mobile: string;

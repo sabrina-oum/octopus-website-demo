@@ -2,21 +2,38 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 import { cx } from "@/lib/cx";
 
-type ButtonVariant = "primary" | "secondary";
+type ButtonVariant = "primary" | "secondary" | "ghost";
 
 type ButtonStyleProps = {
   variant?: ButtonVariant;
   iconOnly?: boolean;
 };
 
+type ButtonShape = "text" | "iconOnly";
+
 const baseClasses =
-  "inline-flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-button border text-cta font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:cursor-not-allowed";
+  "focus-ring inline-flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-button border text-cta font-medium transition-colors disabled:cursor-not-allowed";
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
     "border-button-primary-stroke bg-button-primary text-white hover:bg-button-primary-hover focus-visible:bg-button-primary-hover active:bg-button-primary-pressed disabled:border-button-disabled disabled:bg-button-disabled disabled:text-button-disabled-text",
   secondary:
     "border-button-secondary-stroke bg-white text-text-primary hover:bg-button-secondary-hover active:bg-button-secondary-pressed disabled:bg-button-disabled disabled:text-button-disabled-text",
+  ghost: "border-transparent disabled:text-button-disabled-text",
+};
+
+const shapeClasses: Record<ButtonShape, string> = {
+  text: "px-4",
+  iconOnly: "size-10",
+};
+
+export const ghostTextClasses =
+  "text-button-ghost-text hover:text-text-primary active:text-text-primary";
+
+const ghostShapeClasses: Record<ButtonShape, string> = {
+  text: ghostTextClasses,
+  iconOnly:
+    "text-icon-primary hover:bg-button-ghost-hover active:bg-button-ghost-pressed",
 };
 
 function buttonClasses({
@@ -24,10 +41,13 @@ function buttonClasses({
   iconOnly = false,
   className,
 }: ButtonStyleProps & { className?: string }): string {
+  const shape: ButtonShape = iconOnly ? "iconOnly" : "text";
+
   return cx(
     baseClasses,
     variantClasses[variant],
-    iconOnly ? "size-10" : "px-4",
+    variant === "ghost" && ghostShapeClasses[shape],
+    shapeClasses[shape],
     className,
   );
 }

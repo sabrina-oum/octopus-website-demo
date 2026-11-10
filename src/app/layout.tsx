@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
 import "./globals.css";
 
 const satoshi = localFont({
@@ -10,14 +12,18 @@ const satoshi = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Octopus",
+  title: { default: "Octopus", template: "%s | Octopus" },
   description: "Octopus consumer electronics demo.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={satoshi.variable}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="flex min-h-dvh flex-col font-sans antialiased">
+        <Header />
+        <div className="flex-1">{children}</div>
+        <Footer />
+      </body>
     </html>
   );
 }

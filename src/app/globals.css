@@ -10,6 +10,12 @@
   --spacing-page-desktop: 3rem;
   --container-page: 84rem;
 
+  --spacing-navbar: 3.6875rem;
+  --spacing-navbar-offset: 1rem;
+  --spacing-navbar-row: 2.6875rem;
+  --spacing-menu-link: 2.3125rem;
+  --spacing-footer-column: 7.6875rem;
+
   --color-*: initial;
   --color-white: #ffffff;
   --color-accent: #de2027;
@@ -29,6 +35,16 @@
   --color-button-secondary-stroke: #e8e8e8;
   --color-button-disabled: #f5f5f5;
   --color-button-disabled-text: #b9b9b9;
+  --color-button-ghost-text: #414141;
+  --color-button-ghost-hover: rgb(0 0 0 / 0.04);
+  --color-button-ghost-pressed: rgb(0 0 0 / 0.08);
+
+  --color-navbar: rgb(255 255 255 / 0.85);
+  --color-footer: var(--color-accent);
+
+  --shadow-navbar: 0 0 16px 8px rgb(0 0 0 / 0.08);
+  /* Figma blur 64 = CSS 32 px. */
+  --blur-navbar: 32px;
 
   --font-weight-book: 470;
   --leading-auto: 1.35;
@@ -77,6 +93,7 @@
 
   --radius-card: 1rem;
   --radius-button: 2rem;
+  --radius-navbar: 2rem;
 }
 
 @theme inline {
@@ -96,6 +113,27 @@
   @variant desktop {
     padding-inline: var(--spacing-page-desktop);
   }
+}
+
+@utility navbar-surface {
+  border-radius: var(--radius-navbar);
+  background-color: var(--color-navbar);
+  padding-block: --spacing(2);
+  padding-inline: --spacing(4);
+  box-shadow: var(--shadow-navbar);
+  backdrop-filter: blur(var(--blur-navbar));
+}
+
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+/* Figma cap-height trim. Not supported by Firefox yet. */
+@utility text-trim-cap {
+  text-box: trim-both cap alphabetic;
 }
 
 @utility heading-1 {
