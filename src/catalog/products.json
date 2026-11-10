@@ -1,0 +1,11 @@
+[
+  {
+    "id": "countertop-blender",
+    "slug": "countertop-blender",
+    "name": "Countertop Blender",
+    "category": "kitchen",
+    "shortDescription": "A powerful blender for smoothies, soups and crushed ice.",
+    "image": "/images/products/countertop-blender.png",
+    "bestSeller": true
+  }
+]
