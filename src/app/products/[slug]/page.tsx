@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getProductBySlug, getProducts } from "@/catalog";
+import { ResponsiveImage } from "@/components/ResponsiveImage";
 
 export const dynamicParams = false;
 
@@ -21,18 +21,19 @@ export default async function ProductPage({
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
-      <h1 className="text-3xl font-bold">{product.name}</h1>
-      <p>{product.shortDescription}</p>
-      <div className="relative aspect-square max-w-md">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          sizes="448px"
-          className="object-contain"
-        />
-      </div>
+    <main className="page-container flex flex-col gap-4 py-10">
+      <h1 className="heading-1">{product.name}</h1>
+      <p className="subtitle text-text-secondary">
+        {product.shortDescription}
+      </p>
+      <ResponsiveImage
+        src={product.image}
+        alt={product.name}
+        ratio="1/1"
+        sizes={{ mobile: "100vw", tablet: "50vw" }}
+        preload
+        className="tablet:w-1/2"
+      />
     </main>
   );
 }
