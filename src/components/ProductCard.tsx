@@ -19,7 +19,7 @@ export function ProductCard({ product, titleAs: Title = "h3" }: ProductCardProps
             {product.shortDescription}
           </p>
         </div>
-        <ButtonLink href={`/products/${product.slug}`}>Learn more</ButtonLink>
+        <ButtonLink href={product.href}>Learn more</ButtonLink>
       </div>
       <ResponsiveImage
         src={product.image}

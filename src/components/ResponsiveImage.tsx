@@ -23,7 +23,7 @@ function toSizesAttribute({ mobile, tablet, desktop }: ImageSizes): string {
 type ResponsiveImageProps = {
   src: string;
   alt: string;
-  ratio: AspectRatio;
+  ratio?: AspectRatio;
   sizes: ImageSizes;
   preload?: boolean;
   className?: string;
@@ -40,7 +40,7 @@ export function ResponsiveImage({
   return (
     <div
       className={cx("relative w-full overflow-hidden", className)}
-      style={{ aspectRatio: ratio }}
+      style={ratio ? { aspectRatio: ratio } : undefined}
     >
       <Image
         src={src}

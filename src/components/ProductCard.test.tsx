@@ -8,9 +8,12 @@ const powerBoard: Product = {
   slug: "power-board-usb",
   name: "Octopus Power Board with USB Charging",
   category: "accessories",
-  shortDescription: "A compact power board with four sockets and four USB ports",
+  shortDescription:
+    "A compact power board with four sockets and four USB ports",
   image: "/images/products/power-board-usb.png",
   bestSeller: false,
+  hasPage: false,
+  href: "/products/countertop-blender",
 };
 
 describe("ProductCard", () => {
@@ -28,16 +31,18 @@ describe("ProductCard", () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("img", { name: "Octopus Power Board with USB Charging" }),
+      screen.getByRole("img", {
+        name: "Octopus Power Board with USB Charging",
+      }),
     ).toBeInTheDocument();
   });
 
-  it("links « Learn more » to the product page of that product", () => {
+  it("links « Learn more » to the product page given by the data", () => {
     render(<ProductCard product={powerBoard} />);
 
     expect(screen.getByRole("link", { name: "Learn more" })).toHaveAttribute(
       "href",
-      "/products/power-board-usb",
+      "/products/countertop-blender",
     );
   });
 });

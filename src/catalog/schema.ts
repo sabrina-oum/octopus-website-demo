@@ -15,9 +15,34 @@ export const productSchema = z.object({
   shortDescription: z.string().min(1),
   image: z.string().min(1),
   bestSeller: z.boolean(),
+  hasPage: z.boolean().default(false),
 });
 
-export const productsSchema = z.array(productSchema);
+function productPath(slug: string): string {
+  return `/products/${slug}`;
+}
+
+/** Adds `href`: the product's own page, or else the first product page. */
+export const productsSchema = z
+  .array(productSchema)
+  .transform((products, ctx) => {
+    const fallback = products.find(({ hasPage }) => hasPage);
+
+    if (!fallback) {
+      ctx.issues.push({
+        code: "custom",
+        input: products,
+        message: "At least one product needs a product page to link to",
+      });
+
+      return z.NEVER;
+    }
+
+    return products.map((product) => ({
+      ...product,
+      href: productPath(product.hasPage ? product.slug : fallback.slug),
+    }));
+  });
 
 const sitePathSchema = z
   .string()
@@ -58,7 +83,7 @@ export const homepageSchema = z.object({
 });
 
 export type Category = z.infer<typeof categorySchema>;
-export type Product = z.infer<typeof productSchema>;
+export type Product = z.output<typeof productsSchema>[number];
 export type HeroContent = z.infer<typeof heroSchema>;
 export type HeroVideo = z.infer<typeof heroVideoSchema>;
 export type Homepage = z.infer<typeof homepageSchema>;

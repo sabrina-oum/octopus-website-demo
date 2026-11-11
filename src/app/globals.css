@@ -186,6 +186,20 @@
   }
 }
 
+@utility heading-3 {
+  font-size: var(--text-h3-s);
+  line-height: var(--text-h3-s--line-height);
+  font-weight: var(--font-weight-bold);
+
+  @variant tablet {
+    font-size: var(--text-h3-m);
+  }
+
+  @variant desktop {
+    font-size: var(--text-h3-l);
+  }
+}
+
 @utility subtitle {
   font-size: var(--text-subtitle-s);
   line-height: var(--text-subtitle-s--line-height);
@@ -204,5 +218,11 @@
   body {
     background-color: var(--color-background-main);
     color: var(--color-text-primary);
+  }
+
+  /* Tailwind v4 leaves buttons on the default arrow; show the hand like links. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }

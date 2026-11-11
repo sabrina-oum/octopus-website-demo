@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getHomepage, getProducts } from "@/catalog";
+import { getBestSellers, getHomepage, getProductsWithPage } from "@/catalog";
+import { BestSellers } from "@/components/BestSellers";
 import { Hero } from "@/components/Hero";
 import { ProductCard } from "@/components/ProductCard";
 import { siteName } from "@/lib/site";
@@ -26,14 +27,16 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [{ hero }, products] = await Promise.all([
+  const [{ hero }, bestSellers, products] = await Promise.all([
     getHomepage(),
-    getProducts(),
+    getBestSellers(),
+    getProductsWithPage(),
   ]);
 
   return (
     <main>
       <Hero hero={hero} />
+      <BestSellers products={bestSellers} cards="large" />
       <div className="page-container py-10">
         <ul className="flex flex-col gap-4 tablet:flex-row">
           {products.map((product) => (

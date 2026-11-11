@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ComponentPropsWithoutRef } from "react";
+import type { ComponentProps, ComponentPropsWithoutRef } from "react";
 import { cx } from "@/lib/cx";
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
@@ -52,7 +52,7 @@ function buttonClasses({
   );
 }
 
-type ButtonProps = ButtonStyleProps & ComponentPropsWithoutRef<"button">;
+type ButtonProps = ButtonStyleProps & ComponentProps<"button">;
 
 export function Button({
   variant,
