@@ -75,7 +75,9 @@ test("the homepage exposes its title, description and Open Graph tags", async ({
     "Octopus Ionic Hair Dryer",
   );
   expect(await meta('meta[property="og:type"]')).toBe("website");
-  expect(await meta('meta[property="og:url"]')).toMatch(/^https?:\/\/[^/]+\/?$/);
+  expect(await meta('meta[property="og:url"]')).toMatch(
+    /^https?:\/\/[^/]+\/?$/,
+  );
 
   const image = await meta('meta[property="og:image"]');
   expect(image).toMatch(

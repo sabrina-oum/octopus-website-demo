@@ -7,7 +7,10 @@ type ProductCardProps = {
   titleAs?: "h2" | "h3";
 };
 
-export function ProductCard({ product, titleAs: Title = "h3" }: ProductCardProps) {
+export function ProductCard({
+  product,
+  titleAs: Title = "h3",
+}: ProductCardProps) {
   return (
     <article className="flex h-full flex-col gap-6 rounded-card bg-card px-6 pt-10 text-center tablet:gap-2 tablet:pt-2 tablet:pb-6 tablet:text-left desktop:gap-0 desktop:px-10 desktop:pt-0 desktop:pb-10">
       <div className="relative z-10 flex flex-col items-center gap-6 tablet:items-start desktop:-mt-8 desktop:gap-8">

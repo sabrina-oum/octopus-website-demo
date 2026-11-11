@@ -34,7 +34,9 @@ test.describe("mobile menu", () => {
     await page.goto("/");
     await menuButton(page).click();
 
-    await expect(menu(page).getByRole("link", { name: "Kitchen" })).toBeVisible();
+    await expect(
+      menu(page).getByRole("link", { name: "Kitchen" }),
+    ).toBeVisible();
     await expect(
       menu(page).getByRole("link", { name: "Where to buy" }),
     ).toBeVisible();

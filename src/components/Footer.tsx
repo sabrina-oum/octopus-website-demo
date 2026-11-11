@@ -79,7 +79,9 @@ export function Footer() {
           </nav>
         </div>
         <div className="flex flex-col gap-4 text-label font-book tablet:flex-row tablet:justify-between">
-          <p>Copyright {new Date().getFullYear()} Octopus - All rights reserved</p>
+          <p>
+            Copyright {new Date().getFullYear()} Octopus - All rights reserved
+          </p>
           <Link
             href={legalLink.href}
             className={cx(

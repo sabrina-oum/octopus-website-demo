@@ -38,7 +38,10 @@ describe("Footer", () => {
   });
 
   it("shows the copyright for the year the site is built", () => {
-    vi.useFakeTimers({ now: new Date("2027-03-01T12:00:00Z"), toFake: ["Date"] });
+    vi.useFakeTimers({
+      now: new Date("2027-03-01T12:00:00Z"),
+      toFake: ["Date"],
+    });
     render(<Footer />);
     vi.useRealTimers();
 
