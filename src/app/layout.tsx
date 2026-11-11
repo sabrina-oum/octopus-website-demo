@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { getSiteUrl, siteName } from "@/lib/site";
 import "./globals.css";
 
 const satoshi = localFont({
@@ -12,7 +13,8 @@ const satoshi = localFont({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Octopus", template: "%s | Octopus" },
+  metadataBase: getSiteUrl(),
+  title: { default: siteName, template: `%s | ${siteName}` },
   description: "Octopus consumer electronics demo.",
 };
 

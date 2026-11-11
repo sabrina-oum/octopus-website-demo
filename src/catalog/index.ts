@@ -1,17 +1,37 @@
 import { z } from "zod";
+import homepageJson from "./homepage.json";
 import productsJson from "./products.json";
-import { productsSchema, type Product } from "./schema";
+import {
+  homepageSchema,
+  productsSchema,
+  type Homepage,
+  type Product,
+} from "./schema";
 
-export type { Category, Product } from "./schema";
+export type {
+  Category,
+  HeroContent,
+  HeroVideo,
+  Homepage,
+  Product,
+} from "./schema";
 
-export function parseProducts(raw: unknown): Product[] {
-  const result = productsSchema.safeParse(raw);
+function parseWith<T>(schema: z.ZodType<T>, raw: unknown, label: string): T {
+  const result = schema.safeParse(raw);
 
   if (!result.success) {
-    throw new Error(`Invalid product data:\n${z.prettifyError(result.error)}`);
+    throw new Error(`Invalid ${label} data:\n${z.prettifyError(result.error)}`);
   }
 
   return result.data;
+}
+
+export function parseProducts(raw: unknown): Product[] {
+  return parseWith(productsSchema, raw, "product");
+}
+
+export function parseHomepage(raw: unknown): Homepage {
+  return parseWith(homepageSchema, raw, "homepage");
 }
 
 export async function getProducts(): Promise<Product[]> {
@@ -24,4 +44,8 @@ export async function getProductBySlug(
   const products = await getProducts();
 
   return products.find((product) => product.slug === slug);
+}
+
+export async function getHomepage(): Promise<Homepage> {
+  return parseHomepage(homepageJson);
 }

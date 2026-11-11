@@ -1,0 +1,20 @@
+{
+  "seo": {
+    "title": "Octopus | Kitchen, hair care and home security electronics",
+    "description": "Meet the Octopus Ionic Hair Dryer, then explore Octopus kitchen appliances, hair care, home security and accessories.",
+    "image": {
+      "src": "/images/og/octopus-ionic-hair-dryer.jpg",
+      "width": 1200,
+      "height": 630,
+      "alt": "A woman drying her hair with the Octopus Ionic Hair Dryer"
+    }
+  },
+  "hero": {
+    "title": "Octopus Ionic Hair Dryer",
+    "description": "A powerful ionic hair dryer with a 110,000 RPM motor for fast drying and less frizz",
+    "cta": {
+      "label": "Learn more",
+      "href": "/products/countertop-blender"
+    }
+  }
+}

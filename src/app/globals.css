@@ -9,9 +9,19 @@
   --spacing-page-tablet: 2rem;
   --spacing-page-desktop: 3rem;
   --container-page: 84rem;
+  --container-hero-text: 34.375rem;
 
   --spacing-navbar: 3.6875rem;
+  /* Desktop navbar: 12 px padding around the 40 px buttons. */
+  --spacing-navbar-desktop: 4rem;
   --spacing-navbar-offset: 1rem;
+  /* Full height of the sticky header, so the hero can slide under it. */
+  --spacing-header: calc(
+    var(--spacing-navbar) + 2 * var(--spacing-navbar-offset)
+  );
+  --spacing-header-desktop: calc(
+    var(--spacing-navbar-desktop) + 2 * var(--spacing-navbar-offset)
+  );
   --spacing-navbar-row: 2.6875rem;
   --spacing-menu-link: 2.3125rem;
   --spacing-footer-column: 7.6875rem;
@@ -41,6 +51,10 @@
 
   --color-navbar: rgb(255 255 255 / 0.85);
   --color-footer: var(--color-accent);
+
+  /* Not in Figma: gray stand-in for the hero video's studio backdrop. */
+  --color-hero-placeholder-top: #f5f5f5;
+  --color-hero-placeholder-bottom: #b3b3b3;
 
   --shadow-navbar: 0 0 16px 8px rgb(0 0 0 / 0.08);
   /* Figma blur 64 = CSS 32 px. */
@@ -122,6 +136,14 @@
   padding-inline: --spacing(4);
   box-shadow: var(--shadow-navbar);
   backdrop-filter: blur(var(--blur-navbar));
+}
+
+@utility hero-placeholder {
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-hero-placeholder-top),
+    var(--color-hero-placeholder-bottom)
+  );
 }
 
 @utility focus-ring {
