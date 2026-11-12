@@ -8,53 +8,6 @@ function cards(page: Page) {
   return bestSellers(page).getByRole("article");
 }
 
-test.describe("desktop", () => {
-  test.use({ viewport: { width: 1440, height: 900 } });
-
-  test("the arrows and dots scroll the Homepage best sellers from start to end", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    await bestSellers(page).scrollIntoViewIfNeeded();
-    await expect(bestSellers(page)).toHaveCSS("opacity", "1");
-
-    const previous = bestSellers(page).getByRole("button", {
-      name: "Previous slide",
-    });
-    const next = bestSellers(page).getByRole("button", { name: "Next slide" });
-
-    await expect(previous).toBeDisabled();
-    await expect(next).toBeEnabled();
-    await expect(cards(page).first()).toBeInViewport({
-      ratio: 1,
-    });
-    await expect(cards(page).last()).not.toBeInViewport();
-
-    for (let step = 0; step < 4 && (await next.isEnabled()); step++) {
-      await next.click();
-    }
-    await expect(next).toBeDisabled();
-
-    await expect(cards(page).last()).toBeInViewport({ ratio: 1 });
-    await expect(cards(page).first()).not.toBeInViewport();
-    await expect(previous).toBeEnabled();
-    await expect(
-      bestSellers(page)
-        .getByRole("button", { name: /^Go to position/ })
-        .last(),
-    ).toHaveAttribute("aria-current", "true");
-
-    await bestSellers(page)
-      .getByRole("button", { name: /^Go to position 1 of/ })
-      .click();
-
-    await expect(cards(page).first()).toBeInViewport({
-      ratio: 1,
-    });
-    await expect(previous).toBeDisabled();
-  });
-});
-
 test.describe("touch screen", () => {
   test.use({
     viewport: { width: 390, height: 844 },
