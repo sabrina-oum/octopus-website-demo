@@ -109,6 +109,8 @@
   --text-label-s: 0.625rem;
   --text-label-s--line-height: 1.1;
 
+  --ease-out: cubic-bezier(0, 0, 0.58, 1);
+
   --radius-card: 1rem;
   --radius-button: 2rem;
   --radius-navbar: 2rem;
@@ -196,6 +198,41 @@
   @variant desktop {
     height: auto;
   }
+}
+
+/* Figma Motion Documentation, driven by <Reveal>. Never hidden without JavaScript or on paper. */
+@utility reveal {
+  @media screen and (scripting: enabled) {
+    transition:
+      opacity 1.2s ease-out 0.1s,
+      transform 1.2s ease-out 0.1s;
+
+    [data-reveal="pending"] &,
+    [data-reveal="hidden"] & {
+      opacity: 0;
+      transform: translateY(var(--reveal-travel, 60px));
+
+      @media (prefers-reduced-motion: reduce) {
+        transform: none;
+      }
+    }
+
+    /* Shows the content if the script never loads. */
+    [data-reveal="pending"] & {
+      animation: reveal-fallback 0s 3s forwards;
+    }
+  }
+}
+
+@keyframes reveal-fallback {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility reveal-text {
+  --reveal-travel: 30px;
 }
 
 /* Figma cap-height trim. Not supported by Firefox yet. */

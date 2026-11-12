@@ -68,7 +68,7 @@ export function MobileMenu({ links, cta }: MobileMenuProps) {
                     href={link.href}
                     onClick={closeMenu}
                     className={cx(
-                      "focus-ring flex h-menu-link items-center rounded-button text-cta font-medium transition-colors",
+                      "focus-ring flex h-menu-link items-center rounded-button text-cta font-medium",
                       ghostTextClasses,
                     )}
                   >

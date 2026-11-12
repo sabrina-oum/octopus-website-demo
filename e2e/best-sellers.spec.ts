@@ -16,6 +16,7 @@ test.describe("desktop", () => {
   }) => {
     await page.goto("/");
     await bestSellers(page).scrollIntoViewIfNeeded();
+    await expect(bestSellers(page)).toHaveCSS("opacity", "1");
 
     const previous = bestSellers(page).getByRole("button", {
       name: "Previous slide",

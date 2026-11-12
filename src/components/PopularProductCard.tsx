@@ -10,7 +10,7 @@ export function PopularProductCard({ product }: PopularProductCardProps) {
   return (
     <article className="group relative flex w-44 flex-col gap-6 tablet:w-66 tablet:gap-8">
       <div className="flex aspect-3/4 items-center justify-center rounded-card bg-card">
-        <div className="w-[82.5%]">
+        <div className="w-[82.5%] transition-transform duration-400 ease-out group-hover:scale-110 motion-reduce:transition-none">
           <ResponsiveImage
             src={product.image}
             alt={product.name}
@@ -23,7 +23,7 @@ export function PopularProductCard({ product }: PopularProductCardProps) {
         <h3 className="text-body font-bold tablet:text-title-m">
           <Link
             href={product.href}
-            className="group-hover:underline after:absolute after:inset-0 after:rounded-card focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-focus"
+            className="after:absolute after:inset-0 after:rounded-card focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-focus"
           >
             {product.name}
           </Link>

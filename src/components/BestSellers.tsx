@@ -4,12 +4,14 @@ import { cx } from "@/lib/cx";
 import { Carousel } from "./Carousel";
 import { FeaturedProductCard } from "./FeaturedProductCard";
 import { PopularProductCard } from "./PopularProductCard";
+import { Reveal } from "./Reveal";
 
 type BestSellersLayout = {
   Card: ComponentType<{ product: Product }>;
   section: string;
   gap: string;
   slideGap: string;
+  animated: boolean;
 };
 
 const layouts = {
@@ -19,12 +21,14 @@ const layouts = {
     gap: "gap-8 tablet:gap-10",
     slideGap:
       "[--carousel-gap:--spacing(4)] desktop:[--carousel-gap:--spacing(6)]",
+    animated: true,
   },
   small: {
     Card: PopularProductCard,
     section: "pt-20 pb-10 tablet:pb-20",
     gap: "gap-8",
     slideGap: "[--carousel-gap:--spacing(4)]",
+    animated: false,
   },
 } satisfies Record<string, BestSellersLayout>;
 
@@ -35,23 +39,30 @@ type BestSellersProps = {
 
 export function BestSellers({ products, cards }: BestSellersProps) {
   const titleId = useId();
-  const { Card, section, gap, slideGap } = layouts[cards];
+  const { Card, section, gap, slideGap, animated } = layouts[cards];
+  const Container = animated ? Reveal : "div";
 
   return (
     <section
       aria-labelledby={titleId}
       className={cx("@container overflow-x-clip", section)}
     >
-      <div className={cx("page-container flex flex-col", gap)}>
-        <h2 id={titleId} className="heading-3">
+      <Container className={cx("page-container flex flex-col", gap)}>
+        <h2
+          id={titleId}
+          className={cx("heading-3", animated && "reveal reveal-text")}
+        >
           Best sellers
         </h2>
-        <Carousel labelledBy={titleId} className={cx(gap, slideGap)}>
+        <Carousel
+          labelledBy={titleId}
+          className={cx(gap, slideGap, animated && "reveal")}
+        >
           {products.map((product) => (
             <Card key={product.id} product={product} />
           ))}
         </Carousel>
-      </div>
+      </Container>
     </section>
   );
 }

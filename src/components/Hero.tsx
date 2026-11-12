@@ -3,6 +3,7 @@ import { preload } from "react-dom";
 import type { HeroContent, HeroVideo } from "@/catalog";
 import { breakpointMedia } from "@/lib/breakpoints";
 import { ButtonLink } from "./Button";
+import { Reveal } from "./Reveal";
 
 function HeroVideoBackdrop({ video }: { video: HeroVideo }) {
   if (video.poster) {
@@ -41,17 +42,19 @@ export function Hero({ hero }: HeroProps) {
     >
       {/* The section gradient stands in for the video while it loads. */}
       {hero.video && <HeroVideoBackdrop video={hero.video} />}
-      <div className="relative flex flex-col items-center gap-6 tablet:gap-8">
-        <div className="flex flex-col items-center gap-2 desktop:gap-3">
-          <h1 id={titleId} className="heading-1">
-            {hero.title}
-          </h1>
-          <p className="subtitle max-w-hero-text text-text-secondary">
-            {hero.description}
-          </p>
+      <Reveal className="relative">
+        <div className="reveal reveal-text flex flex-col items-center gap-6 tablet:gap-8">
+          <div className="flex flex-col items-center gap-2 desktop:gap-3">
+            <h1 id={titleId} className="heading-1">
+              {hero.title}
+            </h1>
+            <p className="subtitle max-w-hero-text text-text-secondary">
+              {hero.description}
+            </p>
+          </div>
+          <ButtonLink href={hero.cta.href}>{hero.cta.label}</ButtonLink>
         </div>
-        <ButtonLink href={hero.cta.href}>{hero.cta.label}</ButtonLink>
-      </div>
+      </Reveal>
     </section>
   );
 }

@@ -11,6 +11,7 @@ import { HighlightProductCard } from "./HighlightProductCard";
 import { MediumProductCard } from "./MediumProductCard";
 import { ProductBanner } from "./ProductBanner";
 import { ProductCard } from "./ProductCard";
+import { Reveal } from "./Reveal";
 import { SectionHeader } from "./SectionHeader";
 
 type CategorySectionProps = {
@@ -37,11 +38,12 @@ export function CategorySection({ section }: CategorySectionProps) {
       aria-labelledby={titleId}
       className="pt-10 pb-20 tablet:py-20 desktop:py-30"
     >
-      <div className="page-container flex flex-col gap-10 desktop:gap-20">
+      <Reveal className="page-container flex flex-col gap-10 desktop:gap-20">
         <SectionHeader
           title={title}
           subheading={section.subheading}
           titleId={titleId}
+          className="reveal reveal-text"
         >
           <ButtonLink variant="secondary" href={comingSoonPath}>
             Explore all products<span className="sr-only"> in {title}</span>
@@ -52,7 +54,7 @@ export function CategorySection({ section }: CategorySectionProps) {
         ) : (
           <FeaturedProducts section={section} />
         )}
-      </div>
+      </Reveal>
     </section>
   );
 }
@@ -67,7 +69,7 @@ function FeaturedProducts({ section }: { section: FeaturedSectionData }) {
         beside && "desktop:flex-row",
       )}
     >
-      <div className="desktop:flex-1">
+      <div className="reveal desktop:flex-1">
         <HighlightProductCard
           product={section.featured}
           image={section.image}
@@ -81,7 +83,7 @@ function FeaturedProducts({ section }: { section: FeaturedSectionData }) {
         )}
       >
         {section.products.map((product) => (
-          <li key={product.id}>
+          <li key={product.id} className="reveal">
             <MediumProductCard
               product={product}
               desktopShape={beside ? "horizontal" : "vertical"}
@@ -97,7 +99,7 @@ function SmallCards({ products }: { products: Product[] }) {
   return (
     <ul className="grid gap-4 tablet:grid-cols-3 desktop:gap-6">
       {products.map((product) => (
-        <li key={product.id}>
+        <li key={product.id} className="reveal">
           <ProductCard product={product} />
         </li>
       ))}

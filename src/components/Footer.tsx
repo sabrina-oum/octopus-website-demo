@@ -13,7 +13,7 @@ const focusRingClasses =
   "rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white";
 
 const linkClasses = cx(
-  "block w-fit text-cta font-medium text-trim-cap underline-offset-4 hover:underline",
+  "block w-fit text-cta font-medium text-trim-cap",
   focusRingClasses,
 );
 
@@ -82,13 +82,7 @@ export function Footer() {
           <p>
             Copyright {new Date().getFullYear()} Octopus - All rights reserved
           </p>
-          <Link
-            href={legalLink.href}
-            className={cx(
-              "w-fit underline-offset-4 hover:underline",
-              focusRingClasses,
-            )}
-          >
+          <Link href={legalLink.href} className={cx("w-fit", focusRingClasses)}>
             {legalLink.label}
           </Link>
         </div>

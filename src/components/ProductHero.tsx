@@ -4,6 +4,7 @@ import { whereToBuyLink } from "@/navigation";
 import { ButtonLink } from "./Button";
 import { ColorSelector } from "./ColorSelector";
 import { ResponsiveImage } from "./ResponsiveImage";
+import { Reveal } from "./Reveal";
 
 type ProductHeroProps = {
   product: Product;
@@ -34,22 +35,24 @@ export function ProductHero({ product, children }: ProductHeroProps) {
           />
         </div>
         <div className="px-page-mobile pt-10 tablet:sticky tablet:top-0 tablet:col-start-2 tablet:row-span-2 tablet:row-start-1 tablet:self-start tablet:px-0 tablet:pt-40 tablet:pb-45">
-          <div className="flex flex-col gap-8 desktop:w-88.75">
-            <div className="flex flex-col gap-6">
-              <h1 id={titleId} className="heading-2">
-                {product.name}
-              </h1>
-              <p className="text-body font-book text-text-secondary">
-                {product.description}
-              </p>
+          <Reveal>
+            <div className="reveal flex flex-col gap-8 desktop:w-88.75">
+              <div className="flex flex-col gap-6">
+                <h1 id={titleId} className="heading-2">
+                  {product.name}
+                </h1>
+                <p className="text-body font-book text-text-secondary">
+                  {product.description}
+                </p>
+              </div>
+              <ColorSelector colors={product.colors} />
+              <div className="hidden tablet:block">
+                <ButtonLink href={whereToBuyLink.href} className="w-full">
+                  {whereToBuyLink.label}
+                </ButtonLink>
+              </div>
             </div>
-            <ColorSelector colors={product.colors} />
-            <div className="hidden tablet:block">
-              <ButtonLink href={whereToBuyLink.href} className="w-full">
-                {whereToBuyLink.label}
-              </ButtonLink>
-            </div>
-          </div>
+          </Reveal>
         </div>
         <div className="flex flex-col gap-10 px-page-mobile py-10 empty:hidden tablet:col-start-1 tablet:gap-20 tablet:px-0 tablet:pt-20 tablet:pb-30 desktop:pb-45">
           {children}

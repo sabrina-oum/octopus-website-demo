@@ -12,7 +12,7 @@ type ButtonStyleProps = {
 type ButtonShape = "text" | "iconOnly";
 
 const baseClasses =
-  "focus-ring inline-flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-button border text-cta font-medium transition-colors disabled:cursor-not-allowed";
+  "focus-ring inline-flex h-10 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-button border text-cta font-medium disabled:cursor-not-allowed";
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:

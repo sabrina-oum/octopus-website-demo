@@ -22,6 +22,7 @@ export function HeaderLogoLink({ className, ...props }: HeaderLogoLinkProps) {
         width={32}
         height={32}
         unoptimized
+        loading="eager"
         className="tablet:hidden"
       />
       <Image
@@ -30,6 +31,7 @@ export function HeaderLogoLink({ className, ...props }: HeaderLogoLinkProps) {
         width={108}
         height={32}
         unoptimized
+        loading="eager"
         className="hidden tablet:block"
       />
     </Link>
