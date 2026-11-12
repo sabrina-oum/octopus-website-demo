@@ -25,6 +25,21 @@ const homepage = {
       products: ["power-bank"],
     },
   ],
+  exploreCategories: {
+    title: "Explore all categories",
+    tiles: [{ category: "accessories", image: "/images/products/cable.png" }],
+  },
+  findUs: {
+    title: "Find us at",
+    cta: { label: "Find your nearest store", href: "/coming-soon" },
+    image: {
+      mobile: "/images/banners/find-us-mobile.jpg",
+      tablet: "/images/banners/find-us-tablet.jpg",
+      desktop: "/images/banners/find-us-desktop.jpg",
+      alt: "Octopus appliances on red stands",
+      backdrop: "#D2181E",
+    },
+  },
 };
 
 describe("parseHomepage", () => {
@@ -52,6 +67,29 @@ describe("parseHomepage", () => {
     ).toThrow(/hero\.cta\.href/);
   });
 
+  it("rejects a store locator link that leaves the site", () => {
+    expect(() =>
+      parseHomepage({
+        ...homepage,
+        findUs: {
+          ...homepage.findUs,
+          cta: { label: "Find a store", href: "https://example.com/stores" },
+        },
+      }),
+    ).toThrow(/findUs\.cta\.href/);
+  });
+
+  it("rejects a category tile listed twice", () => {
+    const tile = { category: "kitchen", image: "/images/products/blender.png" };
+
+    expect(() =>
+      parseHomepage({
+        ...homepage,
+        exploreCategories: { title: "Explore", tiles: [tile, tile] },
+      }),
+    ).toThrow(/"kitchen" is listed twice/);
+  });
+
   it("rejects a featured section without its photo, naming the field", () => {
     expect(() =>
       parseHomepage({
@@ -70,6 +108,14 @@ describe("parseHomepage", () => {
 });
 
 describe("getHomepage", () => {
+  it("sends the shipped store locator link to Coming soon, as it is not built", async () => {
+    await expect(getHomepage()).resolves.toMatchObject({
+      findUs: {
+        cta: { label: "Find your nearest store", href: "/coming-soon" },
+      },
+    });
+  });
+
   it("presents the Octopus Ionic Hair Dryer in the shipped hero", async () => {
     await expect(getHomepage()).resolves.toMatchObject({
       hero: {

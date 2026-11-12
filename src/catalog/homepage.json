@@ -68,5 +68,40 @@
         "charging-station-3-in-1"
       ]
     }
-  ]
+  ],
+  "exploreCategories": {
+    "title": "Explore all categories",
+    "tiles": [
+      {
+        "category": "kitchen",
+        "image": "/images/products/personal-blender.png"
+      },
+      {
+        "category": "home-security",
+        "image": "/images/products/indoor-camera.png"
+      },
+      {
+        "category": "hair-care",
+        "image": "/images/products/ionic-hair-dryer.png"
+      },
+      {
+        "category": "accessories",
+        "image": "/images/categories/accessories-cable.png"
+      }
+    ]
+  },
+  "findUs": {
+    "title": "Find us at",
+    "cta": {
+      "label": "Find your nearest store",
+      "href": "/coming-soon"
+    },
+    "image": {
+      "mobile": "/images/banners/find-us-mobile.jpg",
+      "tablet": "/images/banners/find-us-tablet.jpg",
+      "desktop": "/images/banners/find-us-desktop.jpg",
+      "alt": "The Octopus Kettle, Countertop Blender and Air Fryer on red stands",
+      "backdrop": "#D2181E"
+    }
+  }
 }

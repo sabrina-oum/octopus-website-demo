@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { comingSoonPath } from "@/navigation";
 import categoriesJson from "./categories.json";
 import homepageJson from "./homepage.json";
 import productsJson from "./products.json";
@@ -9,6 +10,9 @@ import {
   type Category,
   type CategorySectionContent,
   type CategorySectionData,
+  type CategoryTileData,
+  type CategoryTileContent,
+  type ExploreCategoriesData,
   type Homepage,
   type Product,
 } from "./schema";
@@ -16,6 +20,10 @@ import {
 export type {
   PhotoCrops,
   Category,
+  CategoryTileData,
+  CategoryTileContent,
+  ExploreCategoriesData,
+  FindUsContent,
   CategorySectionContent,
   CategorySectionData,
   FeaturedSectionData,
@@ -161,4 +169,27 @@ export async function getCategorySections(): Promise<CategorySectionData[]> {
   ]);
 
   return buildCategorySections(sections, products, categories);
+}
+
+export function buildCategoryTiles(
+  tiles: CategoryTileContent[],
+  categories: Category[],
+): CategoryTileData[] {
+  return tiles.map((tile) => ({
+    ...tile,
+    categoryName: findCategoryName(tile.category, categories),
+    href: comingSoonPath,
+  }));
+}
+
+export async function getExploreCategories(): Promise<ExploreCategoriesData> {
+  const [{ exploreCategories }, categories] = await Promise.all([
+    getHomepage(),
+    getCategories(),
+  ]);
+
+  return {
+    title: exploreCategories.title,
+    tiles: buildCategoryTiles(exploreCategories.tiles, categories),
+  };
 }

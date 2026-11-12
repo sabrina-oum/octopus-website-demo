@@ -27,7 +27,7 @@ Before the first `yarn test`, install the Playwright browser: `yarn playwright i
 Next.js 16 (App Router, static pages), React 19, TypeScript, Tailwind CSS 4.
 
 - **`src/app`**: the routes: `/`, `/products/[slug]` and a `/coming-soon` placeholder for links outside the two pages.
-- **`src/catalog`**: the content. `products.json` holds the products, `homepage.json` the Homepage hero, SEO and sections. Zod schemas validate both at build time, so bad content fails the build with the path of the error. Pages read content only through the functions of `index.ts`.
+- **`src/catalog`**: the content. `products.json` holds the products, `homepage.json` the Homepage hero, SEO, sections, category tiles and « Find us at » banner. Zod schemas validate both at build time, so bad content fails the build with the path of the error. Pages read content only through the functions of `index.ts`.
 - **`src/components`**: the UI, one component per Figma component: `Button`, `ProductCard`, `Carousel`, `SectionHeader`, `Header`, `Footer`… The same components serve both pages.
 - **`src/app/globals.css`**: the design tokens from Figma (colors, type scale, spacing, breakpoints), defined once in the Tailwind theme.
 
@@ -51,8 +51,10 @@ The Figma file has export disabled: values were read in its Properties panel.
 - **Text over photos.** These photos have no empty wall behind the text, so the text sits on a band in the photo's own color.
 - **Carousel dots.** Figma shows arrows only; the dots asked for by the brief sit left of the arrows.
 - **Icons and font.** Octopus icons were not provided: Lucide icons stand in. The font is Satoshi, self-hosted.
-- **Section spacing.** Figma varies it (60 to 180 px on desktop); every section uses the same spacing.
+- **Section spacing.** Figma varies it (60 to 180 px on desktop); the four category sections share the same spacing. « Explore all categories » follows its Figma values.
 - **Product pages.** Only the Countertop Blender has a page; every « Learn more » leads there.
+- **Category tiles.** Category pages are not built, so every tile leads to « Coming soon », like the category links of the header and footer. The photos are decorative (the label names the link). Accessories uses the provided cable photo, which is not a catalog product.
+- **« Find us at » banner.** The Warehouse logo was not provided and the Figma file is not exportable: it is redrawn as text and an SVG badge, at the Figma size. The store locator is not built; its button leads to « Coming soon ». The focus ring is white on this red banner, as the blue one would not show.
 
 ## With more time
 

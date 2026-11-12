@@ -10,22 +10,35 @@ export const categorySchema = z.object({
   name: z.string().min(1),
 });
 
+/** Flags a category id that appears twice in a list. */
+function rejectRepeatedCategories(
+  ids: string[],
+  field: string,
+  ctx: z.RefinementCtx,
+): void {
+  const seen = new Set<string>();
+
+  ids.forEach((id, index) => {
+    if (seen.has(id)) {
+      ctx.addIssue({
+        code: "custom",
+        path: [index, field],
+        message: `Category "${id}" is listed twice`,
+      });
+    }
+    seen.add(id);
+  });
+}
+
 export const categoriesSchema = z
   .array(categorySchema)
-  .superRefine((categories, ctx) => {
-    const seen = new Set<string>();
-
-    categories.forEach(({ id }, index) => {
-      if (seen.has(id)) {
-        ctx.addIssue({
-          code: "custom",
-          path: [index, "id"],
-          message: `Category "${id}" is listed twice`,
-        });
-      }
-      seen.add(id);
-    });
-  });
+  .superRefine((categories, ctx) =>
+    rejectRepeatedCategories(
+      categories.map(({ id }) => id),
+      "id",
+      ctx,
+    ),
+  );
 
 export const productSchema = z.object({
   id: z.string().min(1),
@@ -76,13 +89,15 @@ export const heroVideoSchema = z.object({
   poster: sitePathSchema.optional(),
 });
 
+const ctaSchema = z.object({
+  label: z.string().min(1),
+  href: sitePathSchema,
+});
+
 export const heroSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
-  cta: z.object({
-    label: z.string().min(1),
-    href: sitePathSchema,
-  }),
+  cta: ctaSchema,
   video: heroVideoSchema.optional(),
 });
 
@@ -141,10 +156,37 @@ export const categorySectionSchema = z.discriminatedUnion("layout", [
   cardsSectionSchema,
 ]);
 
+const categoryTileSchema = z.object({
+  category: categoryIdSchema,
+  image: sitePathSchema,
+});
+
+export const exploreCategoriesSchema = z.object({
+  title: z.string().min(1),
+  tiles: z
+    .array(categoryTileSchema)
+    .min(1)
+    .superRefine((tiles, ctx) =>
+      rejectRepeatedCategories(
+        tiles.map(({ category }) => category),
+        "category",
+        ctx,
+      ),
+    ),
+});
+
+export const findUsSchema = z.object({
+  title: z.string().min(1),
+  cta: ctaSchema,
+  image: photoCropsSchema,
+});
+
 export const homepageSchema = z.object({
   seo: seoSchema,
   hero: heroSchema,
   sections: z.array(categorySectionSchema),
+  exploreCategories: exploreCategoriesSchema,
+  findUs: findUsSchema,
 });
 
 export type Category = z.infer<typeof categorySchema>;
@@ -157,6 +199,19 @@ export type HeroVideo = z.infer<typeof heroVideoSchema>;
 export type Homepage = z.infer<typeof homepageSchema>;
 export type PhotoCrops = z.infer<typeof photoCropsSchema>;
 export type CategorySectionContent = z.infer<typeof categorySectionSchema>;
+export type CategoryTileContent = z.infer<typeof categoryTileSchema>;
+export type FindUsContent = z.infer<typeof findUsSchema>;
+
+/** A tile with its category name and link resolved. */
+export type CategoryTileData = CategoryTileContent & {
+  categoryName: string;
+  href: string;
+};
+
+export type ExploreCategoriesData = {
+  title: string;
+  tiles: CategoryTileData[];
+};
 
 /** A section with its category name and products resolved from their ids. */
 export type FeaturedSectionData = {
