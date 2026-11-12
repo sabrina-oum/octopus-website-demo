@@ -27,11 +27,11 @@ Before the first `yarn test`, install the Playwright browser: `yarn playwright i
 Next.js 16 (App Router, static pages), React 19, TypeScript, Tailwind CSS 4.
 
 - **`src/app`**: the routes: `/`, `/products/[slug]` and a `/coming-soon` placeholder for links outside the two pages.
-- **`src/catalog`**: the content. `products.json` holds every product and the content of its page in one entry, the way a CMS product type would: what the cards show (name, category, photo…), what its page shows (description, colours, and a gallery of photo and feature-card blocks, in page order) and an optional SEO override, field by field, that falls back to the product's name, short description and the site's share image. `homepage.json` holds the Homepage hero, SEO, sections, category tiles and « Find us at » banner. Zod schemas validate them at build time, so bad content fails the build with the path of the error. Pages read content only through the functions of `index.ts`.
+- **`src/catalog`**: the content. `products.json` holds every product and the content of its page in one entry, the way a CMS product type would: what the cards show (name, category, photo…), what its page shows (description, colours, a gallery of photo and feature-card blocks in page order, specifications and downloads) and an optional SEO override, field by field, that falls back to the product's name, short description and the site's share image. `homepage.json` holds the Homepage hero, SEO, sections, category tiles and « Find us at » banner. Zod schemas validate them at build time, so bad content fails the build with the path of the error. Pages read content only through the functions of `index.ts`.
 - **`src/components`**: the UI, one component per Figma component: `Button`, `ProductCard`, `Carousel`, `SectionHeader`, `Header`, `Footer`… The same components serve both pages.
 - **`src/app/globals.css`**: the design tokens from Figma (colors, type scale, spacing, breakpoints), defined once in the Tailwind theme.
 
-Libraries: Embla for the carousel (swipe, snapping), Radix Dialog for the mobile menu (focus trap, Escape), Lucide for the icons, `next/image` for responsive, lazy images.
+Libraries: Embla for the carousel (swipe, snapping), Radix Dialog for the mobile menu (focus trap, Escape), Radix Accordion for the specifications, Lucide for the icons, `next/image` for responsive, lazy images.
 
 ## Trade-offs
 
@@ -59,6 +59,8 @@ The Figma file has export disabled: values were read in its Properties panel.
 - **« Where to buy » on mobile.** Fixed at the bottom of the screen to the end of the page, as in Figma. The page leaves the bar's height free under the footer, so the bar never hides it. The store locator is not built; it leads to « Coming soon ».
 - **Product Open Graph image.** Made from the product photo on the card grey, at 1200 × 630.
 - **Gallery and feature cards.** Their Figma photos were not provided and the file is not exportable: the product cutout stands in for all six, at the Figma sizes, rather than a grey placeholder, so the page reads as a product page. As a cutout is not a full-bleed photo, each feature card shows its text, then the image under it, so the text never covers it. The feature images have an empty alt, as their title already says what they show.
+- **Downloads.** The ticket lists Downloads with the foldable sections; the Figma draws it as a separate card that does not fold, so the page follows the Figma.
+- **User manual.** The manual was not provided: the link opens, in a new tab, a one-page PDF made from the product's specifications, which says so.
 - **Category tiles.** Category pages are not built, so every tile leads to « Coming soon », like the category links of the header and footer. The photos are decorative (the label names the link). Accessories uses the provided cable photo, which is not a catalog product.
 - **« Find us at » banner.** The Warehouse logo was not provided and the Figma file is not exportable: it is redrawn as text and an SVG badge, at the Figma size. The store locator is not built; its button leads to « Coming soon ». The focus ring is white on this red banner, as the blue one would not show.
 
