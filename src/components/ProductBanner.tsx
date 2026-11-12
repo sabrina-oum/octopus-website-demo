@@ -12,7 +12,7 @@ export function ProductBanner({ product, image }: ProductBannerProps) {
   return (
     <article
       style={backdropStyle(image.backdrop)}
-      className="relative isolate flex flex-col bg-(--backdrop) tablet:aspect-[81/50] tablet:justify-center desktop:aspect-[12/5]"
+      className="relative isolate flex flex-col bg-(--backdrop) tablet:aspect-81/50 tablet:justify-center desktop:aspect-12/5"
     >
       <div className="page-container flex flex-col items-center gap-8 pt-20 pb-8 text-center tablet:items-start tablet:py-10 tablet:text-left">
         <div className="flex flex-col gap-4">

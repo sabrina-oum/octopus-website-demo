@@ -1,17 +1,37 @@
 import { z } from "zod";
 
-export const categorySchema = z.enum([
-  "kitchen",
-  "home-security",
-  "hair-care",
-  "accessories",
-]);
+const slugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+
+/** A category's id, as products and sections reference it. */
+const categoryIdSchema = slugSchema;
+
+export const categorySchema = z.object({
+  id: categoryIdSchema,
+  name: z.string().min(1),
+});
+
+export const categoriesSchema = z
+  .array(categorySchema)
+  .superRefine((categories, ctx) => {
+    const seen = new Set<string>();
+
+    categories.forEach(({ id }, index) => {
+      if (seen.has(id)) {
+        ctx.addIssue({
+          code: "custom",
+          path: [index, "id"],
+          message: `Category "${id}" is listed twice`,
+        });
+      }
+      seen.add(id);
+    });
+  });
 
 export const productSchema = z.object({
   id: z.string().min(1),
-  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  slug: slugSchema,
   name: z.string().min(1),
-  category: categorySchema,
+  category: categoryIdSchema,
   shortDescription: z.string().min(1),
   image: z.string().min(1),
   bestSeller: z.boolean(),
@@ -94,7 +114,7 @@ const productIdSchema = productSchema.shape.id;
 
 const featuredSectionSchema = z.object({
   layout: z.enum(["featured-above", "featured-beside"]),
-  category: categorySchema,
+  category: categoryIdSchema,
   subheading: z.string().min(1),
   featured: productIdSchema,
   image: photoCropsSchema,
@@ -103,14 +123,14 @@ const featuredSectionSchema = z.object({
 
 const bannerSectionSchema = z.object({
   layout: z.literal("banner"),
-  category: categorySchema,
+  category: categoryIdSchema,
   featured: productIdSchema,
   image: photoCropsSchema,
 });
 
 const cardsSectionSchema = z.object({
   layout: z.literal("cards"),
-  category: categorySchema,
+  category: categoryIdSchema,
   subheading: z.string().min(1),
   products: z.array(productIdSchema).min(1),
 });
@@ -128,17 +148,21 @@ export const homepageSchema = z.object({
 });
 
 export type Category = z.infer<typeof categorySchema>;
-export type Product = z.output<typeof productsSchema>[number];
+/** A product as stored: its category is only an id. */
+export type ProductContent = z.output<typeof productsSchema>[number];
+/** A product with its category's name resolved from the categories data. */
+export type Product = ProductContent & { categoryName: string };
 export type HeroContent = z.infer<typeof heroSchema>;
 export type HeroVideo = z.infer<typeof heroVideoSchema>;
 export type Homepage = z.infer<typeof homepageSchema>;
 export type PhotoCrops = z.infer<typeof photoCropsSchema>;
 export type CategorySectionContent = z.infer<typeof categorySectionSchema>;
 
-/** A section with its products resolved from their ids. */
+/** A section with its category name and products resolved from their ids. */
 export type FeaturedSectionData = {
   layout: "featured-above" | "featured-beside";
-  category: Category;
+  category: string;
+  categoryName: string;
   subheading: string;
   featured: Product;
   image: PhotoCrops;
@@ -147,14 +171,16 @@ export type FeaturedSectionData = {
 
 export type BannerSectionData = {
   layout: "banner";
-  category: Category;
+  category: string;
+  categoryName: string;
   featured: Product;
   image: PhotoCrops;
 };
 
 export type CardsSectionData = {
   layout: "cards";
-  category: Category;
+  category: string;
+  categoryName: string;
   subheading: string;
   products: Product[];
 };

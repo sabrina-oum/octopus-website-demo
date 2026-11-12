@@ -8,6 +8,7 @@ const kettle: Product = {
   slug: "kettle",
   name: "Octopus Kettle",
   category: "kitchen",
+  categoryName: "Kitchen",
   shortDescription: "A 1.7 L kettle that boils fast on 1800W",
   image: "/images/products/kettle.png",
   bestSeller: true,

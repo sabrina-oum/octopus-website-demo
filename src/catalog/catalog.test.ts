@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   getBestSellers,
+  getCategories,
   getProductBySlug,
   getProductsWithPage,
+  parseCategories,
   parseProducts,
 } from "./index";
+
+const categories = [{ id: "kitchen", name: "Kitchen" }];
 
 const blender = {
   id: "1",
@@ -25,25 +29,54 @@ const kettle = {
   hasPage: false,
 };
 
+describe("parseCategories", () => {
+  it("returns valid categories", () => {
+    expect(parseCategories(categories)).toEqual(categories);
+  });
+
+  it("rejects a category listed twice", () => {
+    expect(() =>
+      parseCategories([...categories, { id: "kitchen", name: "Cooking" }]),
+    ).toThrow(/"kitchen" is listed twice/);
+  });
+
+  it("rejects an id that cannot be used in a URL", () => {
+    expect(() =>
+      parseCategories([{ id: "Hair Care", name: "Hair Care" }]),
+    ).toThrow(/^Invalid category data/);
+  });
+});
+
 describe("parseProducts", () => {
-  it("returns valid products", () => {
-    expect(parseProducts([blender])).toEqual([
-      { ...blender, href: "/products/countertop-blender" },
+  it("returns valid products, with their category name from the categories data", () => {
+    expect(parseProducts([blender], categories)).toEqual([
+      {
+        ...blender,
+        categoryName: "Kitchen",
+        href: "/products/countertop-blender",
+      },
     ]);
   });
 
   it("sends a product without its own page to the first product page", () => {
-    const [, kettleProduct] = parseProducts([blender, kettle]);
+    const [, kettleProduct] = parseProducts([blender, kettle], categories);
 
     expect(kettleProduct.href).toBe("/products/countertop-blender");
   });
 
   it("rejects a catalog where no product has a page to link to", () => {
-    expect(() => parseProducts([kettle])).toThrow(/product page/);
+    expect(() => parseProducts([kettle], categories)).toThrow(/product page/);
+  });
+
+  it("rejects a product whose category does not exist", () => {
+    expect(() =>
+      parseProducts([{ ...blender, category: "garden" }], categories),
+    ).toThrow(/"garden" does not exist/);
   });
 
   it("rejects an invalid entry with a message naming the faulty field", () => {
-    const parse = () => parseProducts([{ ...blender, slug: undefined }]);
+    const parse = () =>
+      parseProducts([{ ...blender, slug: undefined }], categories);
 
     expect(parse).toThrow(/^Invalid product data/);
     expect(parse).toThrow(/slug/);
@@ -51,8 +84,21 @@ describe("parseProducts", () => {
 
   it("rejects a slug that cannot be used in a URL", () => {
     expect(() =>
-      parseProducts([{ ...blender, slug: "Countertop Blender" }]),
+      parseProducts([{ ...blender, slug: "Countertop Blender" }], categories),
     ).toThrow(/slug/);
+  });
+});
+
+describe("getCategories", () => {
+  it("lists the shipped categories with the names shown on the site", async () => {
+    const shipped = await getCategories();
+
+    expect(shipped.map(({ name }) => name)).toEqual([
+      "Kitchen",
+      "Hair Care",
+      "Home Security",
+      "Accessories",
+    ]);
   });
 });
 
@@ -84,6 +130,7 @@ describe("getProductBySlug", () => {
       {
         name: "Countertop Blender",
         category: "kitchen",
+        categoryName: "Kitchen",
       },
     );
   });

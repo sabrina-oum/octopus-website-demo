@@ -1,4 +1,4 @@
-import { categoryLabels, type Product } from "@/catalog";
+import type { Product } from "@/catalog";
 import { ButtonLink } from "./Button";
 import { ResponsiveImage } from "./ResponsiveImage";
 
@@ -12,7 +12,7 @@ export function FeaturedProductCard({ product }: FeaturedProductCardProps) {
       <div className="relative z-10 flex flex-col items-center gap-8 tablet:w-75 tablet:items-start desktop:w-112.5">
         <div className="flex flex-col gap-4">
           <p className="text-body-l font-book text-accent">
-            {categoryLabels[product.category]}
+            {product.categoryName}
           </p>
           <h3 className="heading-3">{product.name}</h3>
           <p className="text-body font-book text-text-secondary tablet:text-title-m">

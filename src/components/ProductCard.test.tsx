@@ -8,6 +8,7 @@ const powerBoard: Product = {
   slug: "power-board-usb",
   name: "Octopus Power Board with USB Charging",
   category: "accessories",
+  categoryName: "Accessories",
   shortDescription:
     "A compact power board with four sockets and four USB ports",
   image: "/images/products/power-board-usb.png",

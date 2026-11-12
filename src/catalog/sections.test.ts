@@ -24,13 +24,25 @@ function product(id: string, category: string, name: string) {
   };
 }
 
-const products = parseProducts([
-  product("countertop-blender", "kitchen", "Countertop Blender"),
-  product("air-fryer", "kitchen", "Octopus Air Fryer"),
-  product("kettle", "kitchen", "Octopus Kettle"),
-  product("power-bank", "accessories", "Octopus Power Bank"),
-  product("car-charger", "accessories", "Octopus Car Charger"),
-]);
+const categories = [
+  { id: "kitchen", name: "Kitchen" },
+  { id: "accessories", name: "Accessories" },
+];
+
+const products = parseProducts(
+  [
+    product("countertop-blender", "kitchen", "Countertop Blender"),
+    product("air-fryer", "kitchen", "Octopus Air Fryer"),
+    product("kettle", "kitchen", "Octopus Kettle"),
+    product("power-bank", "accessories", "Octopus Power Bank"),
+    product("car-charger", "accessories", "Octopus Car Charger"),
+  ],
+  categories,
+);
+
+function build(sections: CategorySectionContent[]): CategorySectionData[] {
+  return buildCategorySections(sections, products, categories);
+}
 
 const kitchenImage = {
   mobile: "/images/categories/kitchen-mobile.jpg",
@@ -58,26 +70,26 @@ const accessoriesSection = {
 
 describe("buildCategorySections", () => {
   it("shows the featured product and the products its section lists, in that order", () => {
-    const [kitchen] = buildCategorySections([kitchenSection], products);
+    const [kitchen] = build([kitchenSection]);
 
     expect(kitchen).toMatchObject({
       category: "kitchen",
+      categoryName: "Kitchen",
       featured: { name: "Octopus Kettle" },
     });
     expect(productNames(kitchen)).toEqual(["Countertop Blender"]);
   });
 
   it("leaves out the products of the category the section does not list", () => {
-    const [kitchen] = buildCategorySections([kitchenSection], products);
+    const [kitchen] = build([kitchenSection]);
 
     expect(productNames(kitchen)).not.toContain("Octopus Air Fryer");
   });
 
   it("shows a product once its id is added to the section in the data", () => {
-    const [accessories] = buildCategorySections(
-      [{ ...accessoriesSection, products: ["power-bank", "car-charger"] }],
-      products,
-    );
+    const [accessories] = build([
+      { ...accessoriesSection, products: ["power-bank", "car-charger"] },
+    ]);
 
     expect(productNames(accessories)).toEqual([
       "Octopus Power Bank",
@@ -86,26 +98,23 @@ describe("buildCategorySections", () => {
   });
 
   it("rejects a product id that does not exist", () => {
+    expect(() => build([{ ...kitchenSection, featured: "toaster" }])).toThrow(
+      /toaster/,
+    );
     expect(() =>
-      buildCategorySections(
-        [{ ...kitchenSection, featured: "toaster" }],
-        products,
-      ),
-    ).toThrow(/toaster/);
-    expect(() =>
-      buildCategorySections(
-        [{ ...accessoriesSection, products: ["phone-case"] }],
-        products,
-      ),
+      build([{ ...accessoriesSection, products: ["phone-case"] }]),
     ).toThrow(/phone-case/);
+  });
+
+  it("rejects a section whose category does not exist", () => {
+    expect(() =>
+      build([{ ...accessoriesSection, category: "garden" }]),
+    ).toThrow(/"garden" does not exist/);
   });
 
   it("rejects a product from another category", () => {
     expect(() =>
-      buildCategorySections(
-        [{ ...kitchenSection, products: ["power-bank"] }],
-        products,
-      ),
+      build([{ ...kitchenSection, products: ["power-bank"] }]),
     ).toThrow(/power-bank.*kitchen/);
   });
 });

@@ -8,6 +8,7 @@ const indoorCamera: Product = {
   slug: "indoor-camera",
   name: "Octopus Indoor Camera",
   category: "home-security",
+  categoryName: "Home Security",
   shortDescription: "A 2K indoor camera that pans to cover the whole room",
   image: "/images/products/indoor-camera.png",
   bestSeller: true,

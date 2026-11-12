@@ -3,12 +3,19 @@ import { describe, expect, it } from "vitest";
 import type { CategorySectionData, Product } from "@/catalog";
 import { CategorySection } from "./CategorySection";
 
-function product(id: string, name: string, category: Product["category"]) {
+const categoryNames: Record<string, string> = {
+  kitchen: "Kitchen",
+  "hair-care": "Hair Care",
+  accessories: "Accessories",
+};
+
+function product(id: string, name: string, category: string) {
   return {
     id,
     slug: id,
     name,
     category,
+    categoryName: categoryNames[category] ?? category,
     shortDescription: `About the ${name}.`,
     image: `/images/products/${id}.png`,
     bestSeller: false,
@@ -40,6 +47,7 @@ function photo(name: string) {
 const kitchen: CategorySectionData = {
   layout: "featured-above",
   category: "kitchen",
+  categoryName: "Kitchen",
   subheading: "Powerful appliances for everyday cooking",
   image: photo("kitchen"),
   featured: blender,
@@ -97,6 +105,7 @@ describe("CategorySection", () => {
         section={{
           layout: "banner",
           category: "hair-care",
+          categoryName: "Hair Care",
           image: photo("hair-dryer"),
           featured: dryer,
         }}
@@ -121,6 +130,7 @@ describe("CategorySection", () => {
         section={{
           layout: "cards",
           category: "accessories",
+          categoryName: "Accessories",
           subheading: "The little things",
           products: [powerBank, charger],
         }}

@@ -1,7 +1,9 @@
 import { z } from "zod";
+import categoriesJson from "./categories.json";
 import homepageJson from "./homepage.json";
 import productsJson from "./products.json";
 import {
+  categoriesSchema,
   homepageSchema,
   productsSchema,
   type Category,
@@ -23,14 +25,8 @@ export type {
   HeroVideo,
   Homepage,
   Product,
+  ProductContent,
 } from "./schema";
-
-export const categoryLabels: Record<Category, string> = {
-  kitchen: "Kitchen",
-  "home-security": "Home Security",
-  "hair-care": "Hair Care",
-  accessories: "Accessories",
-};
 
 function parseWith<T>(
   schema: z.ZodType<T, unknown>,
@@ -46,16 +42,38 @@ function parseWith<T>(
   return result.data;
 }
 
-export function parseProducts(raw: unknown): Product[] {
-  return parseWith(productsSchema, raw, "product");
+/** Checked here, not in Zod: categories live in their own data file. */
+function findCategoryName(id: string, categories: Category[]): string {
+  const category = categories.find((candidate) => candidate.id === id);
+
+  if (!category) {
+    throw new Error(`Category "${id}" does not exist`);
+  }
+
+  return category.name;
+}
+
+export function parseCategories(raw: unknown): Category[] {
+  return parseWith(categoriesSchema, raw, "category");
+}
+
+export function parseProducts(raw: unknown, categories: Category[]): Product[] {
+  return parseWith(productsSchema, raw, "product").map((product) => ({
+    ...product,
+    categoryName: findCategoryName(product.category, categories),
+  }));
 }
 
 export function parseHomepage(raw: unknown): Homepage {
   return parseWith(homepageSchema, raw, "homepage");
 }
 
+export async function getCategories(): Promise<Category[]> {
+  return parseCategories(categoriesJson);
+}
+
 export async function getProducts(): Promise<Product[]> {
-  return parseProducts(productsJson);
+  return parseProducts(productsJson, await getCategories());
 }
 
 export async function getProductsWithPage(): Promise<Product[]> {
@@ -85,7 +103,7 @@ export async function getHomepage(): Promise<Homepage> {
 /** Checked here, not in Zod: it spans the homepage and product data. */
 function findProduct(
   id: string,
-  category: Category,
+  category: string,
   products: Product[],
 ): Product {
   const product = products.find((candidate) => candidate.id === id);
@@ -104,7 +122,9 @@ function findProduct(
 function buildCategorySection(
   section: CategorySectionContent,
   products: Product[],
+  categories: Category[],
 ): CategorySectionData {
+  const categoryName = findCategoryName(section.category, categories);
   const find = (id: string) => findProduct(id, section.category, products);
 
   switch (section.layout) {
@@ -112,28 +132,33 @@ function buildCategorySection(
     case "featured-beside":
       return {
         ...section,
+        categoryName,
         featured: find(section.featured),
         products: section.products.map(find),
       };
     case "banner":
-      return { ...section, featured: find(section.featured) };
+      return { ...section, categoryName, featured: find(section.featured) };
     case "cards":
-      return { ...section, products: section.products.map(find) };
+      return { ...section, categoryName, products: section.products.map(find) };
   }
 }
 
 export function buildCategorySections(
   sections: CategorySectionContent[],
   products: Product[],
+  categories: Category[],
 ): CategorySectionData[] {
-  return sections.map((section) => buildCategorySection(section, products));
+  return sections.map((section) =>
+    buildCategorySection(section, products, categories),
+  );
 }
 
 export async function getCategorySections(): Promise<CategorySectionData[]> {
-  const [{ sections }, products] = await Promise.all([
+  const [{ sections }, products, categories] = await Promise.all([
     getHomepage(),
     getProducts(),
+    getCategories(),
   ]);
 
-  return buildCategorySections(sections, products);
+  return buildCategorySections(sections, products, categories);
 }

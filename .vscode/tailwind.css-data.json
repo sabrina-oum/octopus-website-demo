@@ -1,0 +1,33 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@theme",
+      "description": "Tailwind CSS: defines design tokens as theme variables."
+    },
+    {
+      "name": "@utility",
+      "description": "Tailwind CSS: defines a custom utility class."
+    },
+    {
+      "name": "@variant",
+      "description": "Tailwind CSS: applies a variant (such as a breakpoint) to the styles inside."
+    },
+    {
+      "name": "@custom-variant",
+      "description": "Tailwind CSS: defines a custom variant."
+    },
+    {
+      "name": "@apply",
+      "description": "Tailwind CSS: inlines utility classes into custom CSS."
+    },
+    {
+      "name": "@source",
+      "description": "Tailwind CSS: adds a source file Tailwind scans for classes."
+    },
+    {
+      "name": "@reference",
+      "description": "Tailwind CSS: imports a stylesheet for reference, without emitting its CSS."
+    }
+  ]
+}

@@ -1,9 +1,8 @@
 import { useId } from "react";
-import {
-  categoryLabels,
-  type CategorySectionData,
-  type FeaturedSectionData,
-  type Product,
+import type {
+  CategorySectionData,
+  FeaturedSectionData,
+  Product,
 } from "@/catalog";
 import { cx } from "@/lib/cx";
 import { comingSoonPath } from "@/navigation";
@@ -20,7 +19,7 @@ type CategorySectionProps = {
 
 export function CategorySection({ section }: CategorySectionProps) {
   const titleId = useId();
-  const title = categoryLabels[section.category];
+  const title = section.categoryName;
 
   if (section.layout === "banner") {
     return (

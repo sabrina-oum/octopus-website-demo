@@ -1,0 +1,6 @@
+[
+  { "id": "kitchen", "name": "Kitchen" },
+  { "id": "hair-care", "name": "Hair Care" },
+  { "id": "home-security", "name": "Home Security" },
+  { "id": "accessories", "name": "Accessories" }
+]
