@@ -131,6 +131,39 @@ describe("parseProducts", () => {
     );
   });
 
+  it("keeps the gallery photos and feature cards in the order given", () => {
+    const gallery = [
+      {
+        type: "photo",
+        image: { src: "/images/blender-kitchen.jpg", alt: "A smoothie" },
+      },
+      {
+        type: "features",
+        features: [
+          {
+            title: "Skip the scrubbing",
+            description: "The blender cleans itself.",
+            image: { src: "/images/blender-clean.jpg", alt: "" },
+          },
+        ],
+      },
+    ];
+
+    const [product] = parseProducts([{ ...blender, gallery }], categories);
+
+    expect(product.gallery).toEqual(gallery);
+  });
+
+  it("rejects a gallery photo without alt text", () => {
+    const gallery = [
+      { type: "photo", image: { src: "/images/blender.jpg", alt: "" } },
+    ];
+
+    expect(() => parseProducts([{ ...blender, gallery }], categories)).toThrow(
+      /gallery[\s\S]*alt/,
+    );
+  });
+
   it("rejects a color that is not a #rrggbb hex code", () => {
     const colors = [{ name: "Black", hex: "black" }];
 

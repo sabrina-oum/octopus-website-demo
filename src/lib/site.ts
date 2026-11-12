@@ -8,11 +8,7 @@ function vercelHost(): string | undefined {
   return process.env.VERCEL_BRANCH_URL ?? process.env.VERCEL_URL;
 }
 
-/**
- * Absolute origin that Open Graph URLs resolve against: the production domain
- * in production, the deployment's own URL on Vercel previews, and the local
- * server anywhere else.
- */
+/** Origin for Open Graph URLs: production domain, Vercel preview, or localhost. */
 export function getSiteUrl(): URL {
   const host = vercelHost();
 

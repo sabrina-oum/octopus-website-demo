@@ -185,6 +185,19 @@
   }
 }
 
+/* Product gallery photos and cards: Figma fixed height, full width. Desktop keeps their ratio. */
+@utility gallery-block-height {
+  height: 29.8333rem;
+
+  @variant tablet {
+    height: 39.6667rem;
+  }
+
+  @variant desktop {
+    height: auto;
+  }
+}
+
 /* Figma cap-height trim. Not supported by Firefox yet. */
 @utility text-trim-cap {
   text-box: trim-both cap alphabetic;

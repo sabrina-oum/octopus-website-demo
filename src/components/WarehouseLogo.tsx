@@ -4,11 +4,7 @@ type WarehouseLogoProps = {
   className?: string;
 };
 
-/**
- * The Warehouse logo, redrawn: the Figma file is not exportable and the logo
- * was not provided. The box is the Figma frame (360 × 34 px); the badge
- * overflows it above and below, as in Figma.
- */
+/** Redrawn, as the logo was not provided. The badge overflows the 360 × 34 frame, as in Figma. */
 export function WarehouseLogo({ className }: WarehouseLogoProps) {
   return (
     <span className={cx("relative block", className)}>

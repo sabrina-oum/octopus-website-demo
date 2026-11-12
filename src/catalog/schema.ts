@@ -66,6 +66,30 @@ export const colorSchema = z.object({
   hex: hexColorSchema,
 });
 
+const imageSchema = z.object({ src: sitePathSchema, alt: z.string() });
+
+const galleryPhotoSchema = z.object({
+  type: z.literal("photo"),
+  image: imageSchema.extend({ alt: z.string().min(1) }),
+});
+
+const featureSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  /** Empty alt when the photo only illustrates the title. */
+  image: imageSchema,
+});
+
+const featuresBlockSchema = z.object({
+  type: z.literal("features"),
+  features: z.array(featureSchema).min(1),
+});
+
+export const galleryBlockSchema = z.discriminatedUnion("type", [
+  galleryPhotoSchema,
+  featuresBlockSchema,
+]);
+
 export const productSchema = z.object({
   id: z.string().min(1),
   slug: slugSchema,
@@ -86,6 +110,8 @@ export const productSchema = z.object({
         ctx,
       ),
     ),
+  /** Photos and feature cards under the hero, in page order. */
+  gallery: z.array(galleryBlockSchema).optional(),
   /** Optional, field by field. Missing fields use the name, short description and site share image. */
   seo: seoSchema.partial().optional(),
 });
@@ -205,6 +231,8 @@ export type Category = z.infer<typeof categorySchema>;
 export type ProductColor = z.infer<typeof colorSchema>;
 export type Seo = z.infer<typeof seoSchema>;
 export type SeoImage = z.infer<typeof seoImageSchema>;
+export type GalleryBlock = z.infer<typeof galleryBlockSchema>;
+export type ProductFeature = z.infer<typeof featureSchema>;
 export type ProductContent = z.infer<typeof productSchema>;
 export type Product = Omit<ProductContent, "category"> & {
   category: Category;

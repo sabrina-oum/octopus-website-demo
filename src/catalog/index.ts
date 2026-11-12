@@ -37,6 +37,8 @@ export type {
   Product,
   ProductColor,
   ProductContent,
+  ProductFeature,
+  GalleryBlock,
   Seo,
   SeoImage,
 } from "./schema";

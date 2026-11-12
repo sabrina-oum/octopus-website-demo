@@ -7,6 +7,7 @@ import {
   getProductSlugs,
 } from "@/catalog";
 import { BestSellers } from "@/components/BestSellers";
+import { ProductGallery } from "@/components/ProductGallery";
 import { ProductHero } from "@/components/ProductHero";
 import { WhereToBuyBar } from "@/components/WhereToBuyBar";
 import { pageMetadata } from "@/lib/metadata";
@@ -47,7 +48,9 @@ export default async function ProductPage({
 
   return (
     <main>
-      <ProductHero product={product} />
+      <ProductHero product={product}>
+        {product.gallery && <ProductGallery blocks={product.gallery} />}
+      </ProductHero>
       <BestSellers products={bestSellers} cards="small" />
       <WhereToBuyBar />
     </main>

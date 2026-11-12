@@ -18,6 +18,59 @@
         "hex": "#ffffff"
       }
     ],
+    "gallery": [
+      {
+        "type": "photo",
+        "image": {
+          "src": "/images/products/countertop-blender.png",
+          "alt": "The Octopus Countertop Blender in black"
+        }
+      },
+      {
+        "type": "features",
+        "features": [
+          {
+            "title": "Powers through the tough stuff",
+            "description": "A 1500W motor lets you do anything from crushing ice to blending smoothies",
+            "image": {
+              "src": "/images/products/countertop-blender.png",
+              "alt": ""
+            }
+          },
+          {
+            "title": "Skip the scrubbing",
+            "description": "Add water and a little detergent, press clean, and the blender cleans itself",
+            "image": {
+              "src": "/images/products/countertop-blender.png",
+              "alt": ""
+            }
+          },
+          {
+            "title": "Control in short bursts",
+            "description": "The pulse function runs the blades in bursts, giving you even more control",
+            "image": {
+              "src": "/images/products/countertop-blender.png",
+              "alt": ""
+            }
+          },
+          {
+            "title": "A preset for the everyday",
+            "description": "Seven intelligent presets for smoothies, soups, purées & more",
+            "image": {
+              "src": "/images/products/countertop-blender.png",
+              "alt": ""
+            }
+          }
+        ]
+      },
+      {
+        "type": "photo",
+        "image": {
+          "src": "/images/products/countertop-blender.png",
+          "alt": "The Octopus Countertop Blender, seen from the front"
+        }
+      }
+    ],
     "seo": {
       "title": "Octopus Countertop Blender | 1500W blender with seven presets",
       "description": "Smoothies, soups and crushed ice with a 1500W motor and seven presets. The Octopus Countertop Blender rinses its own jug in one touch.",
