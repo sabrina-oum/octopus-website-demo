@@ -90,6 +90,21 @@ export const galleryBlockSchema = z.discriminatedUnion("type", [
   featuresBlockSchema,
 ]);
 
+const specItemSchema = z.object({
+  label: z.string().min(1),
+  value: z.string().min(1),
+});
+
+const specSectionSchema = z.object({
+  title: z.string().min(1),
+  items: z.array(specItemSchema).min(1),
+});
+
+const downloadSchema = z.object({
+  label: z.string().min(1),
+  href: sitePathSchema,
+});
+
 export const productSchema = z.object({
   id: z.string().min(1),
   slug: slugSchema,
@@ -112,6 +127,8 @@ export const productSchema = z.object({
     ),
   /** Photos and feature cards under the hero, in page order. */
   gallery: z.array(galleryBlockSchema).optional(),
+  specs: z.array(specSectionSchema).optional(),
+  downloads: z.array(downloadSchema).optional(),
   /** Optional, field by field. Missing fields use the name, short description and site share image. */
   seo: seoSchema.partial().optional(),
 });
@@ -233,6 +250,7 @@ export type Seo = z.infer<typeof seoSchema>;
 export type SeoImage = z.infer<typeof seoImageSchema>;
 export type GalleryBlock = z.infer<typeof galleryBlockSchema>;
 export type ProductFeature = z.infer<typeof featureSchema>;
+export type ProductSpecItem = z.infer<typeof specItemSchema>;
 export type ProductContent = z.infer<typeof productSchema>;
 export type Product = Omit<ProductContent, "category"> & {
   category: Category;

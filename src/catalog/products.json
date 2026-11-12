@@ -71,6 +71,53 @@
         }
       }
     ],
+    "specs": [
+      {
+        "title": "Technical specifications",
+        "items": [
+          {
+            "label": "Power",
+            "value": "1500W"
+          },
+          {
+            "label": "Voltage",
+            "value": "220–240 V"
+          },
+          {
+            "label": "Frequency",
+            "value": "50/60 Hz"
+          }
+        ]
+      },
+      {
+        "title": "Dimensions & weight",
+        "items": [
+          {
+            "label": "Dimensions",
+            "value": "238 × 198 × 430 mm"
+          },
+          {
+            "label": "Weight",
+            "value": "4.2 kg"
+          }
+        ]
+      },
+      {
+        "title": "Product information",
+        "items": [
+          {
+            "label": "Model",
+            "value": "BL9023-CB"
+          }
+        ]
+      }
+    ],
+    "downloads": [
+      {
+        "label": "User manual",
+        "href": "/downloads/octopus-countertop-blender-user-manual.pdf"
+      }
+    ],
     "seo": {
       "title": "Octopus Countertop Blender | 1500W blender with seven presets",
       "description": "Smoothies, soups and crushed ice with a 1500W motor and seven presets. The Octopus Countertop Blender rinses its own jug in one touch.",

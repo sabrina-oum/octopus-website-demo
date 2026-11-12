@@ -51,11 +51,9 @@ export function ProductHero({ product, children }: ProductHeroProps) {
             </div>
           </div>
         </div>
-        {children && (
-          <div className="flex flex-col gap-10 px-page-mobile py-10 tablet:col-start-1 tablet:gap-20 tablet:px-0 tablet:pt-20 tablet:pb-30 desktop:pb-45">
-            {children}
-          </div>
-        )}
+        <div className="flex flex-col gap-10 px-page-mobile py-10 empty:hidden tablet:col-start-1 tablet:gap-20 tablet:px-0 tablet:pt-20 tablet:pb-30 desktop:pb-45">
+          {children}
+        </div>
       </div>
     </section>
   );

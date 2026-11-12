@@ -38,6 +38,7 @@ export type {
   ProductColor,
   ProductContent,
   ProductFeature,
+  ProductSpecItem,
   GalleryBlock,
   Seo,
   SeoImage,
