@@ -1,16 +1,74 @@
 # octopus-website-demo
 
+A demo of two pages of the Octopus website, the Homepage and the Countertop Blender product page, built from the Figma « Flows » at three breakpoints.
+
+- Live demo: _to add_
+- Lighthouse reports (mobile): _to add_
+
+## Setup
+
+Requires Node.js 20.9+ and Yarn 1.
+
+```bash
+yarn install
+yarn dev          # http://localhost:3000
+```
+
+| Command                                              | What it does                                                                        |
+| ---------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `yarn build` / `yarn start`                          | Production build and server                                                         |
+| `yarn test`                                          | Component tests (Vitest), then end-to-end tests (Playwright, on a production build) |
+| `yarn typecheck` / `yarn lint` / `yarn format:check` | Static checks                                                                       |
+
+Before the first `yarn test`, install the Playwright browser: `yarn playwright install chromium`.
+
+## Architecture
+
+Next.js 16 (App Router, static pages), React 19, TypeScript, Tailwind CSS 4.
+
+- **`src/app`**: the routes: `/`, `/products/[slug]` and a `/coming-soon` placeholder for links outside the two pages.
+- **`src/catalog`**: the content. `products.json` holds the products, `homepage.json` the Homepage hero, SEO and sections. Zod schemas validate both at build time, so bad content fails the build with the path of the error. Pages read content only through the functions of `index.ts`.
+- **`src/components`**: the UI, one component per Figma component: `Button`, `ProductCard`, `Carousel`, `SectionHeader`, `Header`, `Footer`… The same components serve both pages.
+- **`src/app/globals.css`**: the design tokens from Figma (colors, type scale, spacing, breakpoints), defined once in the Tailwind theme.
+
+Libraries: Embla for the carousel (swipe, snapping), Radix Dialog for the mobile menu (focus trap, Escape), Lucide for the icons, `next/image` for responsive, lazy images.
+
+## Trade-offs
+
+- **Curated Homepage.** Each section of `homepage.json` lists the product ids it shows. A new product appears once its id is added to a section, with no markup change. Showing every product of a category automatically would fill the Homepage as the catalog grows.
+- **Content checked at build.** Product ids are checked against the product list and their category, so a typo fails the build instead of shipping an empty card.
+- **Static pages.** Both pages are prerendered. Moving to a CMS would replace the JSON reads in `src/catalog/index.ts`; the components would not change.
+- **Images.** Category photos are art-directed (one crop per breakpoint, with `<picture>`). Every image sits in a box of known size, so loading causes no layout shift.
+
 ## Assumptions
 
-The Figma file has export, copy and sharing disabled. Design values were read in the Figma Properties panel with a signed-in session, then defined once in the Tailwind theme (`src/app/globals.css`).
+The Figma file has export disabled: values were read in its Properties panel.
 
-- **Font.** The Figma uses Satoshi Variable, a free Fontshare font (ITF Free Font License), self-hosted with `next/font/local`. The mobile title of the small product card is set in Aeonik SemiBold in Figma, a style detached from the design system; it uses Satoshi Bold like the other breakpoints.
-- **Icons.** Octopus's icon files were not provided, so the `Icon` component wraps Lucide with the names of the Figma icon set. Figma gives no stroke width for its outlined glyphs, so strokes of 1.75 px (24 px icons) and 1.25 px (16 px icons) were estimated from the glyph sizes. The Figma "Solid" icons have no Lucide equivalent yet.
-- **Focus ring.** Figma draws the focus ring in `#2069E8` at 35 % opacity, which gives about 1.6:1 contrast on white. It is drawn at full opacity to meet WCAG AA non-text contrast.
-- **Header below 1200 px.** The Figma tablet frames show the full navigation inline. The brief asks for the navigation to collapse into a menu below 1200 px, so the menu is used on tablet as well as on mobile.
-- **Menu links.** The links of the open mobile menu are set in Aeonik Regular in Figma, a style detached from the design system. They use the CTA style (Satoshi Medium) of the desktop navigation.
-- **Footer links.** The Figma Ghost white button does not change on hover, so footer links are underlined on hover to show which one is targeted.
-- **Homepage hero video.** The Figma hero plays `OctopusHairDryer_4K.mp4` (16:9, from tablet up) and `OctopusHairDryer_9;16.mp4` (mobile), which were not provided. The hero shows a gray gradient in their place. Adding a `video` entry (`portrait`, `landscape`, optional `poster`) to `src/catalog/homepage.json` switches it to the muted, looping video, with the poster preloaded (one poster serves both cuts). A pause control and a `prefers-reduced-motion` check should come with the real files.
-- **Hero height.** The Figma hero frames match the device screens (402 × 820 below the status bar, 1600 × 900 on desktop), so the hero fills the screen height (at least `100svh` and 576 px, growing with its content) and slides under the floating header. Its mobile side margin is 24 px, as in Figma, rather than the 16 px page margin.
-- **Hero title width.** Figma caps the title block at 550 px, but its desktop title box is 692 px wide on one line. Only the description is capped at 550 px, so the title keeps its single desktop line.
-- **Open Graph image.** No share image is designed. The homepage uses the provided hair dryer photo, cropped to 1200 × 630.
+- **Header below 1200 px.** The Figma tablet frames show the full navigation; the brief asks for a menu below 1200 px, so tablet uses the menu.
+- **Focus ring.** Drawn at full opacity instead of the Figma 35 %, which fails WCAG AA contrast.
+- **Hero video.** The video files were not provided; the hero shows a gray gradient. Adding a `video` entry to `homepage.json` switches it to the video.
+- **Category photos.** The Figma lifestyle photos were not provided. The « Category » photos take their place, and the large card features the product in the photo: the Octopus Blender for Kitchen, the Video Doorbell for Home Security.
+- **Text over photos.** These photos have no empty wall behind the text, so the text sits on a band in the photo's own color.
+- **Carousel dots.** Figma shows arrows only; the dots asked for by the brief sit left of the arrows.
+- **Icons and font.** Octopus icons were not provided: Lucide icons stand in. The font is Satoshi, self-hosted.
+- **Section spacing.** Figma varies it (60 to 180 px on desktop); every section uses the same spacing.
+- **Product pages.** Only the Countertop Blender has a page; every « Learn more » leads there.
+
+## With more time
+
+- Connect a headless CMS behind `src/catalog`, with remote images and on-demand revalidation.
+- Use the real hero video (with a pause control), lifestyle photos and Octopus icons.
+- Move the category labels from the code into the data.
+- Add visual regression tests per breakpoint, and Lighthouse in CI.
+
+## Use of AI tools
+
+Built with Claude Code. It wrote the code and tests from tickets I wrote, read the Figma values through Claude in Chrome, and checked layouts in the browser. I reviewed every change and made every commit.
+
+Where I corrected it:
+
+- It changed the size of a category card to fix a crop issue; I had it restore the Figma size.
+- It showed every product of a category on the Homepage; I asked for curated sections.
+- It darkened the photos with a gray gradient; I asked for the photo's own color.
+- It placed the Best sellers photo 46 px off on tablet and 25 px off on desktop; I had it measured against Figma and fixed.
+- Its code had long comments and clever generic types; I had it simplified to plain types and short comments.

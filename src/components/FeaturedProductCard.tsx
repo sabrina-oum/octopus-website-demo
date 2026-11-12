@@ -21,7 +21,7 @@ export function FeaturedProductCard({ product }: FeaturedProductCardProps) {
         </div>
         <ButtonLink href={product.href}>Learn more</ButtonLink>
       </div>
-      <div className="-mx-6 min-h-0 flex-1 self-stretch tablet:absolute tablet:inset-y-0 tablet:right-0 tablet:mx-0 tablet:w-103.25 desktop:w-124">
+      <div className="-mx-6 min-h-0 flex-1 self-stretch tablet:absolute tablet:inset-y-0 tablet:left-80.25 tablet:mx-0 tablet:w-103.25 desktop:left-131.75 desktop:w-124">
         <ResponsiveImage
           src={product.image}
           alt={product.name}

@@ -146,6 +146,38 @@
   );
 }
 
+/*
+ * Fades the card's --backdrop colour out over its photo. The opacity follows an
+ * ease-in-out curve: a straight fade leaves a visible edge where it stops.
+ * Solid backdrop up to --fade-start, fully transparent at the end.
+ */
+@utility fade-backdrop {
+  --fade-length: calc(100% - var(--fade-start, 0%));
+  background-image: linear-gradient(
+    var(--fade-direction, to bottom),
+    var(--backdrop) var(--fade-start, 0%),
+    color-mix(in oklab, var(--backdrop) 98%, transparent)
+      calc(var(--fade-start, 0%) + var(--fade-length) * 0.1),
+    color-mix(in oklab, var(--backdrop) 93%, transparent)
+      calc(var(--fade-start, 0%) + var(--fade-length) * 0.2),
+    color-mix(in oklab, var(--backdrop) 84%, transparent)
+      calc(var(--fade-start, 0%) + var(--fade-length) * 0.3),
+    color-mix(in oklab, var(--backdrop) 71%, transparent)
+      calc(var(--fade-start, 0%) + var(--fade-length) * 0.4),
+    color-mix(in oklab, var(--backdrop) 56%, transparent)
+      calc(var(--fade-start, 0%) + var(--fade-length) * 0.5),
+    color-mix(in oklab, var(--backdrop) 40%, transparent)
+      calc(var(--fade-start, 0%) + var(--fade-length) * 0.6),
+    color-mix(in oklab, var(--backdrop) 25%, transparent)
+      calc(var(--fade-start, 0%) + var(--fade-length) * 0.7),
+    color-mix(in oklab, var(--backdrop) 13%, transparent)
+      calc(var(--fade-start, 0%) + var(--fade-length) * 0.8),
+    color-mix(in oklab, var(--backdrop) 4%, transparent)
+      calc(var(--fade-start, 0%) + var(--fade-length) * 0.9),
+    transparent
+  );
+}
+
 @utility focus-ring {
   &:focus-visible {
     outline: 2px solid var(--color-focus);
@@ -183,6 +215,21 @@
 
   @variant desktop {
     font-size: var(--text-h2-l);
+  }
+}
+
+/* H2/S, H2/M, then H1/L on desktop. */
+@utility section-title {
+  font-size: var(--text-h2-s);
+  line-height: var(--text-h2-s--line-height);
+  font-weight: var(--font-weight-bold);
+
+  @variant tablet {
+    font-size: var(--text-h2-m);
+  }
+
+  @variant desktop {
+    font-size: var(--text-h1-l);
   }
 }
 

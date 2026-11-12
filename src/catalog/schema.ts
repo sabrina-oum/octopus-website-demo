@@ -77,9 +77,54 @@ export const seoSchema = z.object({
   }),
 });
 
+const hexColorSchema = z
+  .string()
+  .regex(/^#[0-9a-f]{6}$/i, "Expected a #rrggbb color");
+
+export const photoCropsSchema = z.object({
+  mobile: sitePathSchema,
+  tablet: sitePathSchema,
+  desktop: sitePathSchema,
+  alt: z.string(),
+  /** The photo's tone, behind the text. */
+  backdrop: hexColorSchema,
+});
+
+const productIdSchema = productSchema.shape.id;
+
+const featuredSectionSchema = z.object({
+  layout: z.enum(["featured-above", "featured-beside"]),
+  category: categorySchema,
+  subheading: z.string().min(1),
+  featured: productIdSchema,
+  image: photoCropsSchema,
+  products: z.array(productIdSchema),
+});
+
+const bannerSectionSchema = z.object({
+  layout: z.literal("banner"),
+  category: categorySchema,
+  featured: productIdSchema,
+  image: photoCropsSchema,
+});
+
+const cardsSectionSchema = z.object({
+  layout: z.literal("cards"),
+  category: categorySchema,
+  subheading: z.string().min(1),
+  products: z.array(productIdSchema).min(1),
+});
+
+export const categorySectionSchema = z.discriminatedUnion("layout", [
+  featuredSectionSchema,
+  bannerSectionSchema,
+  cardsSectionSchema,
+]);
+
 export const homepageSchema = z.object({
   seo: seoSchema,
   hero: heroSchema,
+  sections: z.array(categorySectionSchema),
 });
 
 export type Category = z.infer<typeof categorySchema>;
@@ -87,3 +132,32 @@ export type Product = z.output<typeof productsSchema>[number];
 export type HeroContent = z.infer<typeof heroSchema>;
 export type HeroVideo = z.infer<typeof heroVideoSchema>;
 export type Homepage = z.infer<typeof homepageSchema>;
+export type PhotoCrops = z.infer<typeof photoCropsSchema>;
+export type CategorySectionContent = z.infer<typeof categorySectionSchema>;
+
+/** A section with its products resolved from their ids. */
+export type FeaturedSectionData = {
+  layout: "featured-above" | "featured-beside";
+  category: Category;
+  subheading: string;
+  featured: Product;
+  image: PhotoCrops;
+  products: Product[];
+};
+
+export type BannerSectionData = {
+  layout: "banner";
+  category: Category;
+  featured: Product;
+  image: PhotoCrops;
+};
+
+export type CardsSectionData = {
+  layout: "cards";
+  category: Category;
+  subheading: string;
+  products: Product[];
+};
+
+export type CategorySectionData =
+  FeaturedSectionData | BannerSectionData | CardsSectionData;

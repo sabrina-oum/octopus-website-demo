@@ -1,24 +1,8 @@
 import Image from "next/image";
-import { breakpointMedia } from "@/lib/breakpoints";
 import { cx } from "@/lib/cx";
+import { toSizesAttribute, type ImageSizes } from "@/lib/imageSizes";
 
 type AspectRatio = `${number}/${number}`;
-
-type ImageSizes = {
-  mobile: string;
-  tablet?: string;
-  desktop?: string;
-};
-
-function toSizesAttribute({ mobile, tablet, desktop }: ImageSizes): string {
-  return [
-    desktop && `${breakpointMedia.desktop} ${desktop}`,
-    tablet && `${breakpointMedia.tablet} ${tablet}`,
-    mobile,
-  ]
-    .filter(Boolean)
-    .join(", ");
-}
 
 type ResponsiveImageProps = {
   src: string;

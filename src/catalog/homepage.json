@@ -16,5 +16,57 @@
       "label": "Learn more",
       "href": "/products/countertop-blender"
     }
-  }
+  },
+  "sections": [
+    {
+      "layout": "featured-above",
+      "category": "kitchen",
+      "subheading": "Powerful appliances for everyday cooking",
+      "featured": "personal-blender",
+      "image": {
+        "mobile": "/images/categories/kitchen-mobile.jpg",
+        "tablet": "/images/categories/kitchen-tablet.jpg",
+        "desktop": "/images/categories/kitchen-desktop.jpg",
+        "alt": "A woman blending a strawberry smoothie with the Octopus Blender on a wooden counter",
+        "backdrop": "#DCCBB8"
+      },
+      "products": ["kettle", "countertop-blender"]
+    },
+    {
+      "layout": "banner",
+      "category": "hair-care",
+      "featured": "ionic-hair-dryer",
+      "image": {
+        "mobile": "/images/banners/ionic-hair-dryer-mobile.jpg",
+        "tablet": "/images/banners/ionic-hair-dryer-tablet.jpg",
+        "desktop": "/images/banners/ionic-hair-dryer-desktop.jpg",
+        "alt": "A woman drying her hair with the Octopus Ionic Hair Dryer",
+        "backdrop": "#E1C5AF"
+      }
+    },
+    {
+      "layout": "featured-beside",
+      "category": "home-security",
+      "subheading": "Home feels safer when you’re always in the loop",
+      "featured": "video-doorbell",
+      "image": {
+        "mobile": "/images/categories/home-security-mobile.jpg",
+        "tablet": "/images/categories/home-security-tablet.jpg",
+        "desktop": "/images/categories/home-security-mobile.jpg",
+        "alt": "A finger pressing the button of the Octopus Video Doorbell by a front door",
+        "backdrop": "#E8D8D0"
+      },
+      "products": ["indoor-camera", "outdoor-camera"]
+    },
+    {
+      "layout": "cards",
+      "category": "accessories",
+      "subheading": "The little things that make everything work better",
+      "products": [
+        "power-bank-10000",
+        "power-board-usb",
+        "charging-station-3-in-1"
+      ]
+    }
+  ]
 }

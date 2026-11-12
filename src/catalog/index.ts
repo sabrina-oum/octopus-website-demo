@@ -5,12 +5,20 @@ import {
   homepageSchema,
   productsSchema,
   type Category,
+  type CategorySectionContent,
+  type CategorySectionData,
   type Homepage,
   type Product,
 } from "./schema";
 
 export type {
+  PhotoCrops,
   Category,
+  CategorySectionContent,
+  CategorySectionData,
+  FeaturedSectionData,
+  BannerSectionData,
+  CardsSectionData,
   HeroContent,
   HeroVideo,
   Homepage,
@@ -72,4 +80,60 @@ export async function getProductBySlug(
 
 export async function getHomepage(): Promise<Homepage> {
   return parseHomepage(homepageJson);
+}
+
+/** Checked here, not in Zod: it spans the homepage and product data. */
+function findProduct(
+  id: string,
+  category: Category,
+  products: Product[],
+): Product {
+  const product = products.find((candidate) => candidate.id === id);
+
+  if (!product) {
+    throw new Error(`Product "${id}" does not exist`);
+  }
+
+  if (product.category !== category) {
+    throw new Error(`Product "${id}" is not in the ${category} category`);
+  }
+
+  return product;
+}
+
+function buildCategorySection(
+  section: CategorySectionContent,
+  products: Product[],
+): CategorySectionData {
+  const find = (id: string) => findProduct(id, section.category, products);
+
+  switch (section.layout) {
+    case "featured-above":
+    case "featured-beside":
+      return {
+        ...section,
+        featured: find(section.featured),
+        products: section.products.map(find),
+      };
+    case "banner":
+      return { ...section, featured: find(section.featured) };
+    case "cards":
+      return { ...section, products: section.products.map(find) };
+  }
+}
+
+export function buildCategorySections(
+  sections: CategorySectionContent[],
+  products: Product[],
+): CategorySectionData[] {
+  return sections.map((section) => buildCategorySection(section, products));
+}
+
+export async function getCategorySections(): Promise<CategorySectionData[]> {
+  const [{ sections }, products] = await Promise.all([
+    getHomepage(),
+    getProducts(),
+  ]);
+
+  return buildCategorySections(sections, products);
 }

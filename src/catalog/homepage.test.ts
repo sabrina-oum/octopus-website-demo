@@ -17,6 +17,14 @@ const homepage = {
     description: "Dries fast.",
     cta: { label: "Learn more", href: "/products/countertop-blender" },
   },
+  sections: [
+    {
+      layout: "cards",
+      category: "accessories",
+      subheading: "The little things",
+      products: ["power-bank"],
+    },
+  ],
 };
 
 describe("parseHomepage", () => {
@@ -42,6 +50,22 @@ describe("parseHomepage", () => {
         },
       }),
     ).toThrow(/hero\.cta\.href/);
+  });
+
+  it("rejects a featured section without its photo, naming the field", () => {
+    expect(() =>
+      parseHomepage({
+        ...homepage,
+        sections: [
+          {
+            layout: "featured-above",
+            category: "kitchen",
+            subheading: "Powerful appliances",
+            featured: "kettle",
+          },
+        ],
+      }),
+    ).toThrow(/sections\[0\]\.image/);
   });
 });
 
