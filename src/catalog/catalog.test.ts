@@ -1,9 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
-  getBestSellers,
-  getCategories,
-  getProductBySlug,
-  getProductsWithPage,
+  buildProductSeo,
+  getProduct,
   parseCategories,
   parseProducts,
 } from "./index";
@@ -13,12 +11,16 @@ const categories = [{ id: "kitchen", name: "Kitchen" }];
 const blender = {
   id: "1",
   slug: "countertop-blender",
-  name: "Countertop Blender",
+  name: "Octopus Countertop Blender",
   category: "kitchen",
   shortDescription: "Blends everything.",
   image: "/images/products/countertop-blender.png",
-  bestSeller: true,
-  hasPage: true,
+  bestSeller: false,
+  description: "Blends everything, then cleans itself.",
+  colors: [
+    { name: "Black", hex: "#000000" },
+    { name: "White", hex: "#ffffff" },
+  ],
 };
 
 const kettle = {
@@ -26,7 +28,17 @@ const kettle = {
   id: "2",
   slug: "kettle",
   name: "Octopus Kettle",
-  hasPage: false,
+  shortDescription: "Boils water fast.",
+  image: "/images/products/kettle.png",
+  description: "Boils water fast, and stays cool to the touch.",
+  colors: [{ name: "Graphite", hex: "#3c3d40" }],
+};
+
+const siteImage = {
+  src: "/images/og/homepage.jpg",
+  width: 1200,
+  height: 630,
+  alt: "Octopus appliances",
 };
 
 describe("parseCategories", () => {
@@ -48,24 +60,35 @@ describe("parseCategories", () => {
 });
 
 describe("parseProducts", () => {
-  it("returns valid products, with their category name from the categories data", () => {
+  it("returns valid products, with their category from the categories data", () => {
     expect(parseProducts([blender], categories)).toEqual([
       {
         ...blender,
-        categoryName: "Kitchen",
+        category: { id: "kitchen", name: "Kitchen" },
         href: "/products/countertop-blender",
       },
     ]);
   });
 
-  it("sends a product without its own page to the first product page", () => {
-    const [, kettleProduct] = parseProducts([blender, kettle], categories);
+  it("links every product to its own page", () => {
+    const products = parseProducts([blender, kettle], categories);
 
-    expect(kettleProduct.href).toBe("/products/countertop-blender");
+    expect(products.map(({ href }) => href)).toEqual([
+      "/products/countertop-blender",
+      "/products/kettle",
+    ]);
   });
 
-  it("rejects a catalog where no product has a page to link to", () => {
-    expect(() => parseProducts([kettle], categories)).toThrow(/product page/);
+  it("rejects two products with the same slug, as they would share a page", () => {
+    expect(() =>
+      parseProducts([blender, { ...kettle, slug: blender.slug }], categories),
+    ).toThrow(/Slug "countertop-blender" is listed twice/);
+  });
+
+  it("rejects two products with the same id", () => {
+    expect(() =>
+      parseProducts([blender, { ...kettle, id: blender.id }], categories),
+    ).toThrow(/Product "1" is listed twice/);
   });
 
   it("rejects a product whose category does not exist", () => {
@@ -87,55 +110,63 @@ describe("parseProducts", () => {
       parseProducts([{ ...blender, slug: "Countertop Blender" }], categories),
     ).toThrow(/slug/);
   });
-});
 
-describe("getCategories", () => {
-  it("lists the shipped categories with the names shown on the site", async () => {
-    const shipped = await getCategories();
-
-    expect(shipped.map(({ name }) => name)).toEqual([
-      "Kitchen",
-      "Hair Care",
-      "Home Security",
-      "Accessories",
-    ]);
+  it("rejects a product without a description, naming the field", () => {
+    expect(() =>
+      parseProducts([{ ...blender, description: "" }], categories),
+    ).toThrow(/description/);
   });
-});
 
-describe("getBestSellers", () => {
-  it("lists the products marked as best sellers, in the order of the data", async () => {
-    const bestSellers = await getBestSellers();
-
-    expect(bestSellers.map(({ name }) => name)).toEqual([
-      "Octopus Air Fryer 5.7 L",
-      "Octopus Indoor Camera",
-      "Octopus Ionic Hair Dryer",
-      "Octopus Blender",
-      "Octopus Kettle",
-    ]);
+  it("rejects a product without colors, naming the field", () => {
+    expect(() =>
+      parseProducts([{ ...blender, colors: [] }], categories),
+    ).toThrow(/colors/);
   });
-});
 
-describe("getProductsWithPage", () => {
-  it("only builds a page for the Countertop Blender", async () => {
-    const products = await getProductsWithPage();
+  it("rejects a color listed twice", () => {
+    const colors = [...blender.colors, { name: "Black", hex: "#111111" }];
 
-    expect(products.map(({ slug }) => slug)).toEqual(["countertop-blender"]);
-  });
-});
-
-describe("getProductBySlug", () => {
-  it("finds the Countertop Blender in the shipped data", async () => {
-    await expect(getProductBySlug("countertop-blender")).resolves.toMatchObject(
-      {
-        name: "Countertop Blender",
-        category: "kitchen",
-        categoryName: "Kitchen",
-      },
+    expect(() => parseProducts([{ ...blender, colors }], categories)).toThrow(
+      /Color "Black" is listed twice/,
     );
   });
 
+  it("rejects a color that is not a #rrggbb hex code", () => {
+    const colors = [{ name: "Black", hex: "black" }];
+
+    expect(() => parseProducts([{ ...blender, colors }], categories)).toThrow(
+      /#rrggbb/,
+    );
+  });
+});
+
+describe("buildProductSeo", () => {
+  it("uses the product's name, short description and the site's image when it has no SEO of its own", () => {
+    const [product] = parseProducts([kettle], categories);
+
+    expect(buildProductSeo(product, siteImage)).toEqual({
+      title: "Octopus Kettle",
+      description: "Boils water fast.",
+      image: siteImage,
+    });
+  });
+
+  it("uses each SEO field the product overrides, and falls back for the others", () => {
+    const [product] = parseProducts(
+      [{ ...blender, seo: { title: "Octopus Countertop Blender | 1500W" } }],
+      categories,
+    );
+
+    expect(buildProductSeo(product, siteImage)).toEqual({
+      title: "Octopus Countertop Blender | 1500W",
+      description: "Blends everything.",
+      image: siteImage,
+    });
+  });
+});
+
+describe("getProduct", () => {
   it("returns undefined for an unknown slug", async () => {
-    await expect(getProductBySlug("does-not-exist")).resolves.toBeUndefined();
+    await expect(getProduct("does-not-exist")).resolves.toBeUndefined();
   });
 });

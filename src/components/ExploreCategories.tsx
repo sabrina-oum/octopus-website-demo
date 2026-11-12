@@ -21,7 +21,7 @@ export function ExploreCategories({ content }: ExploreCategoriesProps) {
         </h2>
         <ul className="grid grid-cols-2 gap-x-4 gap-y-6 tablet:grid-cols-4 tablet:gap-4 desktop:gap-6">
           {content.tiles.map((tile) => (
-            <li key={tile.category}>
+            <li key={tile.category.id}>
               <CategoryTileLink tile={tile} />
             </li>
           ))}
@@ -47,7 +47,7 @@ function CategoryTileLink({ tile }: { tile: CategoryTileData }) {
           />
         </div>
       </div>
-      <span className="text-title-m font-book">{tile.categoryName}</span>
+      <span className="text-title-m font-book">{tile.category.name}</span>
     </Link>
   );
 }

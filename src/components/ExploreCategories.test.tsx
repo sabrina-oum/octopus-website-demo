@@ -7,14 +7,12 @@ const content: ExploreCategoriesData = {
   title: "Explore all categories",
   tiles: [
     {
-      category: "kitchen",
-      categoryName: "Kitchen",
+      category: { id: "kitchen", name: "Kitchen" },
       image: "/images/products/blender.png",
       href: "/coming-soon",
     },
     {
-      category: "garden",
-      categoryName: "Garden",
+      category: { id: "garden", name: "Garden" },
       image: "/images/products/hose.png",
       href: "/coming-soon",
     },

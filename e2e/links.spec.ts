@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
-
-const builtPages = ["/", "/products/countertop-blender", "/coming-soon"];
+import { linkedProductPaths } from "./support";
 
 test("no link on the built pages is broken", async ({ page, request }) => {
+  const builtPages = ["/", "/coming-soon", ...(await linkedProductPaths(page))];
   const targets = new Set<string>();
 
   for (const path of builtPages) {

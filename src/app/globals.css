@@ -12,10 +12,8 @@
   --container-hero-text: 34.375rem;
 
   --spacing-navbar: 3.6875rem;
-  /* Desktop navbar: 12 px padding around the 40 px buttons. */
   --spacing-navbar-desktop: 4rem;
   --spacing-navbar-offset: 1rem;
-  /* Full height of the sticky header, so the hero can slide under it. */
   --spacing-header: calc(
     var(--spacing-navbar) + 2 * var(--spacing-navbar-offset)
   );
@@ -25,6 +23,7 @@
   --spacing-navbar-row: 2.6875rem;
   --spacing-menu-link: 2.3125rem;
   --spacing-footer-column: 7.6875rem;
+  --spacing-where-to-buy-bar: 3.8125rem;
 
   --color-*: initial;
   --color-white: #ffffff;
@@ -50,10 +49,14 @@
   --color-button-ghost-hover: rgb(0 0 0 / 0.04);
   --color-button-ghost-pressed: rgb(0 0 0 / 0.08);
 
+  --color-swatch-selected: var(--color-accent);
+  --color-swatch-stroke: rgb(0 0 0 / 0.08);
+  --color-swatch-stroke-white: rgb(0 0 0 / 0.2);
+
   --color-navbar: rgb(255 255 255 / 0.85);
   --color-footer: var(--color-accent);
 
-  /* Not in Figma: gray stand-in for the hero video's studio backdrop. */
+  /* Not in Figma: stand-in for the missing hero video. */
   --color-hero-placeholder-top: #f5f5f5;
   --color-hero-placeholder-bottom: #b3b3b3;
 
@@ -147,11 +150,7 @@
   );
 }
 
-/*
- * Fades the card's --backdrop colour out over its photo. The opacity follows an
- * ease-in-out curve: a straight fade leaves a visible edge where it stops.
- * Solid backdrop up to --fade-start, fully transparent at the end.
- */
+/* Fades --backdrop out from --fade-start. Eased: a linear fade leaves a visible edge. */
 @utility fade-backdrop {
   --fade-length: calc(100% - var(--fade-start, 0%));
   background-image: linear-gradient(
@@ -268,7 +267,15 @@
     color: var(--color-text-primary);
   }
 
-  /* Tailwind v4 leaves buttons on the default arrow; show the hand like links. */
+  body:has([data-where-to-buy-bar]) {
+    padding-bottom: var(--spacing-where-to-buy-bar);
+
+    @variant tablet {
+      padding-bottom: 0;
+    }
+  }
+
+  /* Tailwind v4 resets the button cursor to the default arrow. */
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;

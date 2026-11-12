@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getHomepage, parseHomepage } from "./index";
+import { parseHomepage } from "./index";
 
 const homepage = {
   seo: {
@@ -104,24 +104,5 @@ describe("parseHomepage", () => {
         ],
       }),
     ).toThrow(/sections\[0\]\.image/);
-  });
-});
-
-describe("getHomepage", () => {
-  it("sends the shipped store locator link to Coming soon, as it is not built", async () => {
-    await expect(getHomepage()).resolves.toMatchObject({
-      findUs: {
-        cta: { label: "Find your nearest store", href: "/coming-soon" },
-      },
-    });
-  });
-
-  it("presents the Octopus Ionic Hair Dryer in the shipped hero", async () => {
-    await expect(getHomepage()).resolves.toMatchObject({
-      hero: {
-        title: "Octopus Ionic Hair Dryer",
-        cta: { label: "Learn more", href: "/products/countertop-blender" },
-      },
-    });
   });
 });

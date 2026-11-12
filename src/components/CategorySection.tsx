@@ -19,7 +19,7 @@ type CategorySectionProps = {
 
 export function CategorySection({ section }: CategorySectionProps) {
   const titleId = useId();
-  const title = section.categoryName;
+  const title = section.category.name;
 
   if (section.layout === "banner") {
     return (
@@ -58,7 +58,6 @@ export function CategorySection({ section }: CategorySectionProps) {
 }
 
 function FeaturedProducts({ section }: { section: FeaturedSectionData }) {
-  // On desktop: large card on the left, medium cards stacked on its right.
   const beside = section.layout === "featured-beside";
 
   return (

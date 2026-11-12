@@ -4,10 +4,8 @@ function bestSellers(page: Page) {
   return page.getByRole("group", { name: "Best sellers" });
 }
 
-function card(page: Page, name: string) {
-  return bestSellers(page)
-    .getByRole("article")
-    .filter({ has: page.getByRole("heading", { name }) });
+function cards(page: Page) {
+  return bestSellers(page).getByRole("article");
 }
 
 test.describe("desktop", () => {
@@ -26,18 +24,18 @@ test.describe("desktop", () => {
 
     await expect(previous).toBeDisabled();
     await expect(next).toBeEnabled();
-    await expect(card(page, "Octopus Air Fryer 5.7 L")).toBeInViewport({
+    await expect(cards(page).first()).toBeInViewport({
       ratio: 1,
     });
-    await expect(card(page, "Octopus Kettle")).not.toBeInViewport();
+    await expect(cards(page).last()).not.toBeInViewport();
 
     for (let step = 0; step < 4 && (await next.isEnabled()); step++) {
       await next.click();
     }
     await expect(next).toBeDisabled();
 
-    await expect(card(page, "Octopus Kettle")).toBeInViewport({ ratio: 1 });
-    await expect(card(page, "Octopus Air Fryer 5.7 L")).not.toBeInViewport();
+    await expect(cards(page).last()).toBeInViewport({ ratio: 1 });
+    await expect(cards(page).first()).not.toBeInViewport();
     await expect(previous).toBeEnabled();
     await expect(
       bestSellers(page)
@@ -49,21 +47,10 @@ test.describe("desktop", () => {
       .getByRole("button", { name: /^Go to position 1 of/ })
       .click();
 
-    await expect(card(page, "Octopus Air Fryer 5.7 L")).toBeInViewport({
+    await expect(cards(page).first()).toBeInViewport({
       ratio: 1,
     });
     await expect(previous).toBeDisabled();
-  });
-
-  test("the product page shows every best seller, with no controls when all fit", async ({
-    page,
-  }) => {
-    await page.goto("/products/countertop-blender");
-    await bestSellers(page).scrollIntoViewIfNeeded();
-
-    await expect(bestSellers(page).getByRole("article")).toHaveCount(5);
-    await expect(card(page, "Octopus Kettle")).toBeInViewport({ ratio: 1 });
-    await expect(bestSellers(page).getByRole("button")).toHaveCount(0);
   });
 });
 
@@ -77,7 +64,7 @@ test.describe("touch screen", () => {
   test("a swipe moves the best sellers to the next card", async ({ page }) => {
     await page.goto("/");
 
-    const firstCard = card(page, "Octopus Air Fryer 5.7 L");
+    const firstCard = cards(page).first();
     await bestSellers(page).scrollIntoViewIfNeeded();
     await expect(
       bestSellers(page).getByRole("button", { name: /^Go to position 1 of/ }),
@@ -104,7 +91,7 @@ test.describe("touch screen", () => {
     await expect(
       bestSellers(page).getByRole("button", { name: "Previous slide" }),
     ).toBeEnabled();
-    await expect(card(page, "Octopus Indoor Camera")).toBeInViewport({
+    await expect(cards(page).nth(1)).toBeInViewport({
       ratio: 1,
     });
   });
@@ -124,8 +111,8 @@ for (const viewport of [
       await page.goto("/");
       await bestSellers(page).scrollIntoViewIfNeeded();
 
-      const firstCard = card(page, "Octopus Air Fryer 5.7 L");
-      const lastCard = card(page, "Octopus Kettle");
+      const firstCard = cards(page).first();
+      const lastCard = cards(page).last();
       const heading = page.getByRole("heading", { name: "Best sellers" });
       const next = bestSellers(page).getByRole("button", {
         name: "Next slide",

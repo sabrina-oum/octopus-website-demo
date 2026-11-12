@@ -15,6 +15,8 @@ import {
   type ExploreCategoriesData,
   type Homepage,
   type Product,
+  type Seo,
+  type SeoImage,
 } from "./schema";
 
 export type {
@@ -33,7 +35,10 @@ export type {
   HeroVideo,
   Homepage,
   Product,
+  ProductColor,
   ProductContent,
+  Seo,
+  SeoImage,
 } from "./schema";
 
 function parseWith<T>(
@@ -50,25 +55,32 @@ function parseWith<T>(
   return result.data;
 }
 
-/** Checked here, not in Zod: categories live in their own data file. */
-function findCategoryName(id: string, categories: Category[]): string {
+/** Not in Zod: categories are in another file. */
+function findCategory(id: string, categories: Category[]): Category {
   const category = categories.find((candidate) => candidate.id === id);
 
   if (!category) {
     throw new Error(`Category "${id}" does not exist`);
   }
 
-  return category.name;
+  return category;
 }
 
 export function parseCategories(raw: unknown): Category[] {
   return parseWith(categoriesSchema, raw, "category");
 }
 
+function productPath(slug: string): string {
+  return `/products/${slug}`;
+}
+
 export function parseProducts(raw: unknown, categories: Category[]): Product[] {
-  return parseWith(productsSchema, raw, "product").map((product) => ({
+  const products = parseWith(productsSchema, raw, "product");
+
+  return products.map((product) => ({
     ...product,
-    categoryName: findCategoryName(product.category, categories),
+    category: findCategory(product.category, categories),
+    href: productPath(product.slug),
   }));
 }
 
@@ -84,31 +96,42 @@ export async function getProducts(): Promise<Product[]> {
   return parseProducts(productsJson, await getCategories());
 }
 
-export async function getProductsWithPage(): Promise<Product[]> {
-  const products = await getProducts();
-
-  return products.filter((product) => product.hasPage);
-}
-
 export async function getBestSellers(): Promise<Product[]> {
   const products = await getProducts();
 
   return products.filter((product) => product.bestSeller);
 }
 
-export async function getProductBySlug(
-  slug: string,
-): Promise<Product | undefined> {
+export async function getProductSlugs(): Promise<string[]> {
+  const products = await getProducts();
+
+  return products.map(({ slug }) => slug);
+}
+
+export async function getProduct(slug: string): Promise<Product | undefined> {
   const products = await getProducts();
 
   return products.find((product) => product.slug === slug);
+}
+
+export function buildProductSeo(product: Product, defaultImage: SeoImage): Seo {
+  return {
+    title: product.seo?.title ?? product.name,
+    description: product.seo?.description ?? product.shortDescription,
+    image: product.seo?.image ?? defaultImage,
+  };
+}
+
+export async function getProductSeo(product: Product): Promise<Seo> {
+  const { seo } = await getHomepage();
+
+  return buildProductSeo(product, seo.image);
 }
 
 export async function getHomepage(): Promise<Homepage> {
   return parseHomepage(homepageJson);
 }
 
-/** Checked here, not in Zod: it spans the homepage and product data. */
 function findProduct(
   id: string,
   category: string,
@@ -120,7 +143,7 @@ function findProduct(
     throw new Error(`Product "${id}" does not exist`);
   }
 
-  if (product.category !== category) {
+  if (product.category.id !== category) {
     throw new Error(`Product "${id}" is not in the ${category} category`);
   }
 
@@ -132,7 +155,7 @@ function buildCategorySection(
   products: Product[],
   categories: Category[],
 ): CategorySectionData {
-  const categoryName = findCategoryName(section.category, categories);
+  const category = findCategory(section.category, categories);
   const find = (id: string) => findProduct(id, section.category, products);
 
   switch (section.layout) {
@@ -140,14 +163,14 @@ function buildCategorySection(
     case "featured-beside":
       return {
         ...section,
-        categoryName,
+        category,
         featured: find(section.featured),
         products: section.products.map(find),
       };
     case "banner":
-      return { ...section, categoryName, featured: find(section.featured) };
+      return { ...section, category, featured: find(section.featured) };
     case "cards":
-      return { ...section, categoryName, products: section.products.map(find) };
+      return { ...section, category, products: section.products.map(find) };
   }
 }
 
@@ -177,7 +200,7 @@ export function buildCategoryTiles(
 ): CategoryTileData[] {
   return tiles.map((tile) => ({
     ...tile,
-    categoryName: findCategoryName(tile.category, categories),
+    category: findCategory(tile.category, categories),
     href: comingSoonPath,
   }));
 }

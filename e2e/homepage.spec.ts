@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { expectSeoTags } from "./support";
 
 const breakpoints = {
   mobile: { width: 390, height: 844 },
@@ -7,7 +8,9 @@ const breakpoints = {
 };
 
 function hero(page: Page) {
-  return page.getByRole("region", { name: "Octopus Ionic Hair Dryer" });
+  return page
+    .getByRole("region")
+    .filter({ has: page.getByRole("heading", { level: 1 }) });
 }
 
 for (const [name, viewport] of Object.entries(breakpoints)) {
@@ -17,15 +20,8 @@ for (const [name, viewport] of Object.entries(breakpoints)) {
     await page.setViewportSize(viewport);
     await page.goto("/");
 
-    await expect(
-      hero(page).getByRole("heading", {
-        level: 1,
-        name: "Octopus Ionic Hair Dryer",
-      }),
-    ).toBeVisible();
-    await expect(
-      hero(page).getByRole("link", { name: "Learn more" }),
-    ).toHaveAttribute("href", "/products/countertop-blender");
+    await expect(hero(page).getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(hero(page).getByRole("link")).toBeVisible();
 
     const box = await hero(page).boundingBox();
     expect(box?.y).toBe(0);
@@ -54,38 +50,14 @@ test("no width scrolls the page horizontally", async ({ page }) => {
 
 test("the homepage exposes its title, description and Open Graph tags", async ({
   page,
-  request,
 }) => {
   await page.goto("/");
 
-  await expect(page).toHaveTitle(
-    "Octopus | Kitchen, hair care and home security electronics",
-  );
-
-  const meta = (selector: string) =>
-    page.locator(selector).first().getAttribute("content");
-
-  expect(await meta('meta[name="description"]')).toContain(
-    "Octopus Ionic Hair Dryer",
-  );
-  expect(await meta('meta[property="og:title"]')).toBe(
-    "Octopus | Kitchen, hair care and home security electronics",
-  );
-  expect(await meta('meta[property="og:description"]')).toContain(
-    "Octopus Ionic Hair Dryer",
-  );
-  expect(await meta('meta[property="og:type"]')).toBe("website");
-  expect(await meta('meta[property="og:url"]')).toMatch(
-    /^https?:\/\/[^/]+\/?$/,
-  );
-
-  const image = await meta('meta[property="og:image"]');
-  expect(image).toMatch(
-    /^https?:\/\/.+\/images\/og\/octopus-ionic-hair-dryer\.jpg$/,
-  );
-  expect(await meta('meta[property="og:image:width"]')).toBe("1200");
-  expect(await meta('meta[property="og:image:height"]')).toBe("630");
-
-  const response = await request.get(new URL(image!).pathname);
-  expect(response.status()).toBe(200);
+  await expectSeoTags(page, "/");
+  expect(
+    await page
+      .locator('meta[property="og:type"]')
+      .first()
+      .getAttribute("content"),
+  ).toBe("website");
 });

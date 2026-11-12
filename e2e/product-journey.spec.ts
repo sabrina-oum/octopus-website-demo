@@ -1,22 +1,27 @@
 import { expect, test } from "@playwright/test";
 
-test("a visitor goes from the homepage card to the product page", async ({
+test("a visitor goes from a homepage card to that product's page", async ({
   page,
 }) => {
   await page.goto("/");
 
-  const card = page.getByRole("article").filter({
-    has: page.getByRole("heading", { name: "Countertop Blender" }),
-  });
-  await expect(
-    card.getByRole("img", { name: "Countertop Blender" }),
-  ).toBeVisible();
+  const learnMore = page.getByRole("link", { name: "Learn more" });
+  const card = page
+    .getByRole("main")
+    .getByRole("article")
+    .filter({ has: learnMore.and(page.locator('[href^="/products/"]')) })
+    .first();
+  const link = card.getByRole("link", { name: "Learn more" });
+  await expect(card.getByRole("img")).toBeVisible();
 
-  await card.getByRole("link", { name: "Learn more" }).click();
+  const name = await card.getByRole("heading").first().textContent();
+  const href = await link.getAttribute("href");
 
-  await expect(page).toHaveURL("/products/countertop-blender");
+  await link.click();
+
+  await expect(page).toHaveURL(href!);
   await expect(
-    page.getByRole("heading", { level: 1, name: "Countertop Blender" }),
+    page.getByRole("heading", { level: 1, name: name!, exact: true }),
   ).toBeVisible();
 });
 

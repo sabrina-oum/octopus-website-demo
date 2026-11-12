@@ -1,21 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { Product } from "@/catalog";
+import { makeProduct } from "@/test/fixtures";
 import { ProductCard } from "./ProductCard";
 
-const powerBoard: Product = {
-  id: "power-board",
-  slug: "power-board-usb",
+const powerBoard = makeProduct({
+  id: "power-board-usb",
   name: "Octopus Power Board with USB Charging",
-  category: "accessories",
-  categoryName: "Accessories",
+  category: { id: "accessories", name: "Accessories" },
   shortDescription:
     "A compact power board with four sockets and four USB ports",
-  image: "/images/products/power-board-usb.png",
-  bestSeller: false,
-  hasPage: false,
-  href: "/products/countertop-blender",
-};
+  href: "/products/power-board-usb",
+});
 
 describe("ProductCard", () => {
   it("shows the product name, description and image from the data", () => {
@@ -43,7 +38,7 @@ describe("ProductCard", () => {
 
     expect(screen.getByRole("link", { name: "Learn more" })).toHaveAttribute(
       "href",
-      "/products/countertop-blender",
+      "/products/power-board-usb",
     );
   });
 });

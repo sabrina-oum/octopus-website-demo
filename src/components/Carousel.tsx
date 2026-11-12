@@ -46,7 +46,7 @@ function useEmblaValue<T>(
   );
 }
 
-/** Whether the last slide runs past the window edge, wherever Embla has scrolled. */
+/** Whether the last slide runs past the window edge. */
 function slidesOverflow(api: EmblaCarouselType): boolean {
   const track = api.containerNode().getBoundingClientRect();
   const lastSlide = api.slideNodes().at(-1)?.getBoundingClientRect();
@@ -80,10 +80,7 @@ type CarouselProps = {
   className?: string;
 };
 
-/**
- * Embla stays inside this file. Expects a window-wide `@container` ancestor
- * that clips horizontal overflow, so slides show up to the window edges.
- */
+/** Needs a window-wide `@container` ancestor that clips horizontal overflow. */
 export function Carousel({ children, labelledBy, className }: CarouselProps) {
   const [viewportRef, api] = useEmblaCarousel({
     align: "start",
@@ -94,7 +91,6 @@ export function Carousel({ children, labelledBy, className }: CarouselProps) {
   const canScrollNext = useEmblaValue(api, (a) => a.canScrollNext(), false);
   const snapCount = useEmblaValue(api, (a) => a.scrollSnapList().length, 0);
   const selectedSnap = useEmblaValue(api, (a) => a.selectedScrollSnap(), 0);
-  // Reduced motion: arrows and dots jump instead of sliding.
   const jump = usePrefersReducedMotion();
 
   const overflows = useEmblaValue(api, slidesOverflow, false);

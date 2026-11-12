@@ -1,18 +1,35 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   getBestSellers,
-  getProductBySlug,
-  getProductsWithPage,
+  getProduct,
+  getProductSeo,
+  getProductSlugs,
 } from "@/catalog";
 import { BestSellers } from "@/components/BestSellers";
-import { ResponsiveImage } from "@/components/ResponsiveImage";
+import { ProductHero } from "@/components/ProductHero";
+import { WhereToBuyBar } from "@/components/WhereToBuyBar";
+import { pageMetadata } from "@/lib/metadata";
 
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  const products = await getProductsWithPage();
+  const slugs = await getProductSlugs();
 
-  return products.map(({ slug }) => ({ slug }));
+  return slugs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/products/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProduct(slug);
+
+  if (!product) {
+    notFound();
+  }
+
+  return pageMetadata(await getProductSeo(product), product.href);
 }
 
 export default async function ProductPage({
@@ -20,31 +37,19 @@ export default async function ProductPage({
 }: PageProps<"/products/[slug]">) {
   const { slug } = await params;
   const [product, bestSellers] = await Promise.all([
-    getProductBySlug(slug),
+    getProduct(slug),
     getBestSellers(),
   ]);
 
-  if (!product?.hasPage) {
+  if (!product) {
     notFound();
   }
 
   return (
     <main>
-      <div className="page-container flex flex-col gap-4 py-10">
-        <h1 className="heading-1">{product.name}</h1>
-        <p className="subtitle text-text-secondary">
-          {product.shortDescription}
-        </p>
-        <ResponsiveImage
-          src={product.image}
-          alt={product.name}
-          ratio="1/1"
-          sizes={{ mobile: "100vw", tablet: "50vw" }}
-          preload
-          className="tablet:w-1/2"
-        />
-      </div>
+      <ProductHero product={product} />
       <BestSellers products={bestSellers} cards="small" />
+      <WhereToBuyBar />
     </main>
   );
 }

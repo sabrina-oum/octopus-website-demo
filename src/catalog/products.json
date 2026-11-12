@@ -2,12 +2,32 @@
   {
     "id": "countertop-blender",
     "slug": "countertop-blender",
-    "name": "Countertop Blender",
+    "name": "Octopus Countertop Blender",
     "category": "kitchen",
     "shortDescription": "A powerful blender for smoothies, soups and crushed ice.",
     "image": "/images/products/countertop-blender.png",
     "bestSeller": false,
-    "hasPage": true
+    "description": "The Octopus Countertop Blender has the power for daily smoothies and tougher jobs alike. A 1500W motor and seven presets handle most of the work, and a one-touch clean cycle rinses the jug so you don't have to.",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      },
+      {
+        "name": "White",
+        "hex": "#ffffff"
+      }
+    ],
+    "seo": {
+      "title": "Octopus Countertop Blender | 1500W blender with seven presets",
+      "description": "Smoothies, soups and crushed ice with a 1500W motor and seven presets. The Octopus Countertop Blender rinses its own jug in one touch.",
+      "image": {
+        "src": "/images/og/octopus-countertop-blender.jpg",
+        "width": 1200,
+        "height": 630,
+        "alt": "The Octopus Countertop Blender in black"
+      }
+    }
   },
   {
     "id": "air-fryer-5-7l",
@@ -16,7 +36,14 @@
     "category": "kitchen",
     "shortDescription": "A 5.7 L air fryer that cooks meals quickly and evenly, with 2200W and dual heaters",
     "image": "/images/products/air-fryer-5-7l.png",
-    "bestSeller": true
+    "bestSeller": true,
+    "description": "The Octopus Air Fryer 5.7 L cooks meals for the whole family with little to no oil. Its 2200W element and dual heaters cook quickly and evenly, so food comes out crisp all over.",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ]
   },
   {
     "id": "indoor-camera",
@@ -25,7 +52,14 @@
     "category": "home-security",
     "shortDescription": "A 2K indoor camera that pans to cover the whole room and tracks movement as it happens",
     "image": "/images/products/indoor-camera.png",
-    "bestSeller": true
+    "bestSeller": true,
+    "description": "The Octopus Indoor Camera records in 2K and pans to cover the whole room. When something moves, the camera follows it as it happens.",
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#ffffff"
+      }
+    ]
   },
   {
     "id": "ionic-hair-dryer",
@@ -34,7 +68,14 @@
     "category": "hair-care",
     "shortDescription": "An ionic hair dryer with a 110,000 RPM motor for fast drying and less frizz",
     "image": "/images/products/ionic-hair-dryer.png",
-    "bestSeller": true
+    "bestSeller": true,
+    "description": "The Octopus Ionic Hair Dryer pairs a 110,000 RPM motor with ionic care. It dries hair fast and leaves it smoother, with less frizz.",
+    "colors": [
+      {
+        "name": "Gunmetal",
+        "hex": "#5c5e62"
+      }
+    ]
   },
   {
     "id": "personal-blender",
@@ -43,7 +84,14 @@
     "category": "kitchen",
     "shortDescription": "A 300W personal blender that blends straight into a cup you can take with you",
     "image": "/images/products/personal-blender.png",
-    "bestSeller": true
+    "bestSeller": true,
+    "description": "The Octopus Blender blends on 300W straight into the cup you drink from. Blend your smoothie, then take the cup with you.",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ]
   },
   {
     "id": "kettle",
@@ -52,7 +100,14 @@
     "category": "kitchen",
     "shortDescription": "A 1.7 L kettle that boils fast on 1800W, with a body that stays cool to the touch",
     "image": "/images/products/kettle.png",
-    "bestSeller": true
+    "bestSeller": true,
+    "description": "The Octopus Kettle boils up to 1.7 L on 1800W. Its body stays cool to the touch, even right after it boils.",
+    "colors": [
+      {
+        "name": "Graphite",
+        "hex": "#3c3d40"
+      }
+    ]
   },
   {
     "id": "outdoor-camera",
@@ -61,7 +116,14 @@
     "category": "home-security",
     "shortDescription": "An outdoor camera that runs on solar power and records in 3K",
     "image": "/images/products/outdoor-camera.png",
-    "bestSeller": false
+    "bestSeller": false,
+    "description": "The Octopus Outdoor Camera records in 3K and runs on solar power, so it keeps watching without a cable to run to it.",
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#ffffff"
+      }
+    ]
   },
   {
     "id": "video-doorbell",
@@ -70,7 +132,14 @@
     "category": "home-security",
     "shortDescription": "A 2K video doorbell that lets you answer from your phone",
     "image": "/images/products/video-doorbell.png",
-    "bestSeller": false
+    "bestSeller": false,
+    "description": "The Octopus Video Doorbell shows who is at the door in 2K. Answer them from your phone, wherever you are.",
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#ffffff"
+      }
+    ]
   },
   {
     "id": "power-bank-10000",
@@ -79,7 +148,14 @@
     "category": "accessories",
     "shortDescription": "A slim power bank with the USB-C cable already built in",
     "image": "/images/products/power-bank-10000.png",
-    "bestSeller": false
+    "bestSeller": false,
+    "description": "The Octopus Power Bank holds 10,000 mAh in a slim case. Its USB-C cable is built in, so there is no cable to forget.",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ]
   },
   {
     "id": "power-board-usb",
@@ -88,7 +164,14 @@
     "category": "accessories",
     "shortDescription": "A compact power board with four sockets and four USB ports",
     "image": "/images/products/power-board-usb.png",
-    "bestSeller": false
+    "bestSeller": false,
+    "description": "The Octopus Power Board with USB Charging fits four sockets and four USB ports in one compact board, for your plugs and your phones alike.",
+    "colors": [
+      {
+        "name": "Black",
+        "hex": "#000000"
+      }
+    ]
   },
   {
     "id": "charging-station-3-in-1",
@@ -97,6 +180,13 @@
     "category": "accessories",
     "shortDescription": "A Qi2 stand that charges your phone, watch and earbuds at the same time",
     "image": "/images/products/charging-station-3-in-1.png",
-    "bestSeller": false
+    "bestSeller": false,
+    "description": "The Octopus 3-in-1 Magnetic Charging Station is a Qi2 stand that charges your phone, watch and earbuds at the same time, with your phone held in place by magnets.",
+    "colors": [
+      {
+        "name": "White",
+        "hex": "#ffffff"
+      }
+    ]
   }
 ]

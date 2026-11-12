@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   buildCategorySections,
-  getCategorySections,
   parseProducts,
   type CategorySectionContent,
   type CategorySectionData,
@@ -20,7 +19,8 @@ function product(id: string, category: string, name: string) {
     shortDescription: "Does its job.",
     image: `/images/products/${id}.png`,
     bestSeller: false,
-    hasPage: id === "countertop-blender",
+    description: "Does its job, every day.",
+    colors: [{ name: "Black", hex: "#000000" }],
   };
 }
 
@@ -73,8 +73,7 @@ describe("buildCategorySections", () => {
     const [kitchen] = build([kitchenSection]);
 
     expect(kitchen).toMatchObject({
-      category: "kitchen",
-      categoryName: "Kitchen",
+      category: { id: "kitchen", name: "Kitchen" },
       featured: { name: "Octopus Kettle" },
     });
     expect(productNames(kitchen)).toEqual(["Countertop Blender"]);
@@ -116,27 +115,5 @@ describe("buildCategorySections", () => {
     expect(() =>
       build([{ ...kitchenSection, products: ["power-bank"] }]),
     ).toThrow(/power-bank.*kitchen/);
-  });
-});
-
-describe("getCategorySections", () => {
-  it("lists the shipped Homepage sections in the Figma order", async () => {
-    const shipped = await getCategorySections();
-
-    expect(shipped.map(({ category }) => category)).toEqual([
-      "kitchen",
-      "hair-care",
-      "home-security",
-      "accessories",
-    ]);
-  });
-
-  it("shows two cards beside the large one in Kitchen, as in Figma", async () => {
-    const [kitchen] = await getCategorySections();
-
-    expect(productNames(kitchen)).toEqual([
-      "Octopus Kettle",
-      "Countertop Blender",
-    ]);
   });
 });

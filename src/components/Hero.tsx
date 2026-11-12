@@ -9,10 +9,8 @@ function HeroVideoBackdrop({ video }: { video: HeroVideo }) {
     preload(video.poster, { as: "image", fetchPriority: "high" });
   }
 
-  // TODO(real video files): add a pause control and respect
-  // prefers-reduced-motion before shipping an autoplaying loop (WCAG 2.2.2).
-  // Browsers pick a <source> once, on load: resizing across the tablet
-  // breakpoint keeps the cut chosen at load.
+  // TODO(real video): add a pause control and honour reduced motion (WCAG 2.2.2).
+  // The <source> is picked once, at load: resizing keeps that cut.
   return (
     <video
       aria-hidden
@@ -41,8 +39,7 @@ export function Hero({ hero }: HeroProps) {
       aria-labelledby={titleId}
       className="hero-placeholder relative isolate -mt-header flex min-h-[max(100svh,--spacing(144))] flex-col items-center overflow-hidden px-6 pt-26 pb-26 text-center tablet:px-page-tablet tablet:pt-45 desktop:-mt-header-desktop desktop:px-page-desktop"
     >
-      {/* The gradient on the section stands in for the Figma video, 
-      and stays behind it while it loads. */}
+      {/* The section gradient stands in for the video while it loads. */}
       {hero.video && <HeroVideoBackdrop video={hero.video} />}
       <div className="relative flex flex-col items-center gap-6 tablet:gap-8">
         <div className="flex flex-col items-center gap-2 desktop:gap-3">

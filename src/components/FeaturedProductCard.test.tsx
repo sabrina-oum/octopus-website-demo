@@ -1,20 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { Product } from "@/catalog";
+import { makeProduct } from "@/test/fixtures";
 import { FeaturedProductCard } from "./FeaturedProductCard";
 
-const indoorCamera: Product = {
+const indoorCamera = makeProduct({
   id: "indoor-camera",
-  slug: "indoor-camera",
   name: "Octopus Indoor Camera",
-  category: "home-security",
-  categoryName: "Home Security",
+  category: { id: "home-security", name: "Home Security" },
   shortDescription: "A 2K indoor camera that pans to cover the whole room",
-  image: "/images/products/indoor-camera.png",
   bestSeller: true,
-  hasPage: false,
-  href: "/products/countertop-blender",
-};
+  href: "/products/indoor-camera",
+});
 
 describe("FeaturedProductCard", () => {
   it("shows the category, name, description and image from the data", () => {
@@ -37,7 +33,7 @@ describe("FeaturedProductCard", () => {
 
     expect(screen.getByRole("link", { name: "Learn more" })).toHaveAttribute(
       "href",
-      "/products/countertop-blender",
+      "/products/indoor-camera",
     );
   });
 });

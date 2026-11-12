@@ -10,7 +10,7 @@ type ArtDirectedImageProps = {
   className?: string;
 };
 
-/** Fills its positioned parent, which sets the size: no layout shift. */
+/** Fills its positioned parent, which sets the size. */
 export function ArtDirectedImage({
   image,
   sizes,

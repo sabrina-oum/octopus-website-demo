@@ -1,20 +1,15 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { Product } from "@/catalog";
+import { makeProduct } from "@/test/fixtures";
 import { PopularProductCard } from "./PopularProductCard";
 
-const kettle: Product = {
+const kettle = makeProduct({
   id: "kettle",
-  slug: "kettle",
   name: "Octopus Kettle",
-  category: "kitchen",
-  categoryName: "Kitchen",
   shortDescription: "A 1.7 L kettle that boils fast on 1800W",
-  image: "/images/products/kettle.png",
   bestSeller: true,
-  hasPage: false,
-  href: "/products/countertop-blender",
-};
+  href: "/products/kettle",
+});
 
 describe("PopularProductCard", () => {
   it("shows the name, description and image from the data", () => {
@@ -36,6 +31,6 @@ describe("PopularProductCard", () => {
 
     expect(
       screen.getByRole("link", { name: "Octopus Kettle" }),
-    ).toHaveAttribute("href", "/products/countertop-blender");
+    ).toHaveAttribute("href", "/products/kettle");
   });
 });

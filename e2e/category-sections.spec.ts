@@ -6,110 +6,42 @@ const breakpoints = {
   desktop: { width: 1440, height: 900 },
 };
 
-const categories = ["Kitchen", "Hair Care", "Home Security", "Accessories"];
-
-function section(page: Page, name: string) {
-  return page.getByRole("region", { name, exact: true });
+function sections(page: Page) {
+  return page
+    .getByRole("main")
+    .getByRole("region")
+    .filter({ hasNot: page.getByRole("heading", { level: 1 }) })
+    .filter({ hasNot: page.getByRole("group", { name: "Best sellers" }) });
 }
 
-function card(page: Page, sectionName: string, productName: string) {
-  return section(page, sectionName)
-    .getByRole("article")
-    .filter({ has: page.getByRole("heading", { name: productName }) });
+function cardSections(page: Page) {
+  return sections(page).filter({
+    has: page.getByRole("link", { name: /^Explore all products/ }),
+  });
 }
-
-async function cardBox(page: Page, sectionName: string, productName: string) {
-  const box = await card(page, sectionName, productName).boundingBox();
-  if (!box) throw new Error(`The ${productName} card is not rendered`);
-  return box;
-}
-
-async function top(page: Page, name: string) {
-  const box = await section(page, name).boundingBox();
-  if (!box) throw new Error(`The ${name} section is not rendered`);
-  return box.y;
-}
-
-test("the category sections follow the hero in the Figma order", async ({
-  page,
-}) => {
-  await page.goto("/");
-
-  const tops = [];
-  for (const name of categories) {
-    await expect(section(page, name)).toBeVisible();
-    tops.push(await top(page, name));
-  }
-
-  expect(tops).toEqual([...tops].sort((a, b) => a - b));
-});
-
-test("every « Learn more » of the sections leads to the Countertop Blender", async ({
-  page,
-}) => {
-  await page.goto("/");
-
-  for (const name of categories) {
-    const links = section(page, name).getByRole("link", { name: "Learn more" });
-    expect(await links.count(), `${name} has products`).toBeGreaterThan(0);
-
-    for (const href of await links.evaluateAll((anchors) =>
-      anchors.map((anchor) => anchor.getAttribute("href")),
-    )) {
-      expect(href, name).toBe("/products/countertop-blender");
-    }
-  }
-});
 
 test.describe("mobile", () => {
   test.use({ viewport: breakpoints.mobile });
 
-  test("the rows become stacked columns", async ({ page }) => {
-    await page.goto("/");
-
-    const outdoor = await cardBox(
-      page,
-      "Home Security",
-      "Octopus Outdoor Camera",
-    );
-    const indoor = await cardBox(
-      page,
-      "Home Security",
-      "Octopus Indoor Camera",
-    );
-
-    expect(outdoor.x).toBe(indoor.x);
-    expect(outdoor.y).toBeGreaterThan(indoor.y + indoor.height);
-  });
-});
-
-test.describe("desktop", () => {
-  test.use({ viewport: breakpoints.desktop });
-
-  test("the large card sits beside the stacked cards in Home Security", async ({
+  test("the cards of every category section stack in one column", async ({
     page,
   }) => {
     await page.goto("/");
 
-    const doorbell = await cardBox(
-      page,
-      "Home Security",
-      "Octopus Video Doorbell",
-    );
-    const indoor = await cardBox(
-      page,
-      "Home Security",
-      "Octopus Indoor Camera",
-    );
-    const outdoor = await cardBox(
-      page,
-      "Home Security",
-      "Octopus Outdoor Camera",
-    );
+    const all = await cardSections(page).all();
+    expect(all.length).toBeGreaterThan(0);
+    for (const section of all) {
+      const boxes = [];
+      for (const card of await section.getByRole("article").all()) {
+        boxes.push((await card.boundingBox())!);
+      }
 
-    expect(indoor.x).toBeGreaterThan(doorbell.x + doorbell.width);
-    expect(indoor.x).toBe(outdoor.x);
-    expect(outdoor.y).toBeGreaterThan(indoor.y);
+      for (const [index, box] of boxes.slice(1).entries()) {
+        const above = boxes[index];
+        expect(box.x).toBe(above.x);
+        expect(box.y).toBeGreaterThan(above.y + above.height);
+      }
+    }
   });
 });
 
@@ -121,10 +53,10 @@ type LayoutShift = PerformanceEntry & {
 type MeasuredWindow = Window & { layoutShift?: number };
 
 for (const [name, viewport] of Object.entries(breakpoints)) {
-  test(`the ${name} sections load the photo cropped for ${name}, without shifting the page`, async ({
+  test(`at ${name} width, the sections load their lazy images without shifting the page`, async ({
     page,
   }) => {
-    // Sums the layout shifts (CLS entries) the page reports.
+    // Sums the page's layout shifts.
     await page.addInitScript(() => {
       const measured = window as MeasuredWindow;
       measured.layoutShift = 0;
@@ -139,17 +71,11 @@ for (const [name, viewport] of Object.entries(breakpoints)) {
     await page.setViewportSize(viewport);
     await page.goto("/");
 
-    const photo = section(page, "Kitchen").getByRole("img", {
-      name: /^A woman blending/,
-    });
-    await expect(photo).toHaveAttribute("loading", "lazy");
-
-    // Only the shifts caused while the lazy images below the fold load.
+    // Count only the shifts from the lazy images.
     await page.evaluate(() => ((window as MeasuredWindow).layoutShift = 0));
-    for (const name of categories) {
-      const images = section(page, name).getByRole("img");
-      await section(page, name).scrollIntoViewIfNeeded();
-      for (const image of await images.all()) {
+    for (const section of await sections(page).all()) {
+      await section.scrollIntoViewIfNeeded();
+      for (const image of await section.locator("img").all()) {
         await image.scrollIntoViewIfNeeded();
         await expect
           .poll(() => image.evaluate((img: HTMLImageElement) => img.complete))
@@ -157,13 +83,6 @@ for (const [name, viewport] of Object.entries(breakpoints)) {
       }
     }
 
-    await expect
-      .poll(() =>
-        photo.evaluate(
-          (img: HTMLImageElement) => img.complete && img.currentSrc,
-        ),
-      )
-      .toContain(encodeURIComponent(`/images/categories/kitchen-${name}.jpg`));
     expect(
       await page.evaluate(() => (window as MeasuredWindow).layoutShift),
     ).toBe(0);

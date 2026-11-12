@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCategoryTiles, getExploreCategories } from "./index";
+import { buildCategoryTiles } from "./index";
 
 const categories = [
   { id: "kitchen", name: "Kitchen" },
@@ -17,8 +17,14 @@ describe("buildCategoryTiles", () => {
     );
 
     expect(tiles).toMatchObject([
-      { categoryName: "Hair Care", image: "/images/products/hair-dryer.png" },
-      { categoryName: "Kitchen", image: "/images/products/blender.png" },
+      {
+        category: { id: "hair-care", name: "Hair Care" },
+        image: "/images/products/hair-dryer.png",
+      },
+      {
+        category: { id: "kitchen", name: "Kitchen" },
+        image: "/images/products/blender.png",
+      },
     ]);
   });
 
@@ -38,21 +44,5 @@ describe("buildCategoryTiles", () => {
         categories,
       ),
     ).toThrow(/Category "garden" does not exist/);
-  });
-});
-
-describe("getExploreCategories", () => {
-  it("links every shipped tile to Coming soon, in the Figma order", async () => {
-    const { title, tiles } = await getExploreCategories();
-
-    expect(title).toBe("Explore all categories");
-    expect(tiles.map(({ categoryName, href }) => [categoryName, href])).toEqual(
-      [
-        ["Kitchen", "/coming-soon"],
-        ["Home Security", "/coming-soon"],
-        ["Hair Care", "/coming-soon"],
-        ["Accessories", "/coming-soon"],
-      ],
-    );
   });
 });

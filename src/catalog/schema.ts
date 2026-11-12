@@ -2,7 +2,6 @@ import { z } from "zod";
 
 const slugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 
-/** A category's id, as products and sections reference it. */
 const categoryIdSchema = slugSchema;
 
 export const categorySchema = z.object({
@@ -10,35 +9,62 @@ export const categorySchema = z.object({
   name: z.string().min(1),
 });
 
-/** Flags a category id that appears twice in a list. */
-function rejectRepeatedCategories(
-  ids: string[],
+function rejectRepeated(
+  values: string[],
   field: string,
+  label: string,
   ctx: z.RefinementCtx,
 ): void {
   const seen = new Set<string>();
 
-  ids.forEach((id, index) => {
-    if (seen.has(id)) {
+  values.forEach((value, index) => {
+    if (seen.has(value)) {
       ctx.addIssue({
         code: "custom",
         path: [index, field],
-        message: `Category "${id}" is listed twice`,
+        message: `${label} "${value}" is listed twice`,
       });
     }
-    seen.add(id);
+    seen.add(value);
   });
 }
 
 export const categoriesSchema = z
   .array(categorySchema)
   .superRefine((categories, ctx) =>
-    rejectRepeatedCategories(
+    rejectRepeated(
       categories.map(({ id }) => id),
       "id",
+      "Category",
       ctx,
     ),
   );
+
+const sitePathSchema = z
+  .string()
+  .regex(/^\/(?!\/)/, "Expected a path on this site, starting with /");
+
+const seoImageSchema = z.object({
+  src: sitePathSchema,
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+  alt: z.string().min(1),
+});
+
+export const seoSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  image: seoImageSchema,
+});
+
+const hexColorSchema = z
+  .string()
+  .regex(/^#[0-9a-f]{6}$/i, "Expected a #rrggbb color");
+
+export const colorSchema = z.object({
+  name: z.string().min(1),
+  hex: hexColorSchema,
+});
 
 export const productSchema = z.object({
   id: z.string().min(1),
@@ -48,43 +74,45 @@ export const productSchema = z.object({
   shortDescription: z.string().min(1),
   image: z.string().min(1),
   bestSeller: z.boolean(),
-  hasPage: z.boolean().default(false),
+  description: z.string().min(1),
+  colors: z
+    .array(colorSchema)
+    .min(1)
+    .superRefine((colors, ctx) =>
+      rejectRepeated(
+        colors.map(({ name }) => name),
+        "name",
+        "Color",
+        ctx,
+      ),
+    ),
+  /** Optional, field by field. Missing fields use the name, short description and site share image. */
+  seo: seoSchema.partial().optional(),
 });
 
-function productPath(slug: string): string {
-  return `/products/${slug}`;
-}
+const productIdSchema = productSchema.shape.id;
 
-/** Adds `href`: the product's own page, or else the first product page. */
 export const productsSchema = z
   .array(productSchema)
-  .transform((products, ctx) => {
-    const fallback = products.find(({ hasPage }) => hasPage);
-
-    if (!fallback) {
-      ctx.issues.push({
-        code: "custom",
-        input: products,
-        message: "At least one product needs a product page to link to",
-      });
-
-      return z.NEVER;
-    }
-
-    return products.map((product) => ({
-      ...product,
-      href: productPath(product.hasPage ? product.slug : fallback.slug),
-    }));
+  .superRefine((products, ctx) => {
+    rejectRepeated(
+      products.map(({ id }) => id),
+      "id",
+      "Product",
+      ctx,
+    );
+    rejectRepeated(
+      products.map(({ slug }) => slug),
+      "slug",
+      "Slug",
+      ctx,
+    );
   });
 
-const sitePathSchema = z
-  .string()
-  .regex(/^\/(?!\/)/, "Expected a path on this site, starting with /");
-
 export const heroVideoSchema = z.object({
-  /** 9:16 cut, played below the tablet breakpoint. */
+  /** 9:16, below tablet. */
   portrait: sitePathSchema,
-  /** 16:9 cut, played from the tablet breakpoint up. */
+  /** 16:9, tablet and up. */
   landscape: sitePathSchema,
   poster: sitePathSchema.optional(),
 });
@@ -101,31 +129,14 @@ export const heroSchema = z.object({
   video: heroVideoSchema.optional(),
 });
 
-export const seoSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
-  image: z.object({
-    src: sitePathSchema,
-    width: z.number().int().positive(),
-    height: z.number().int().positive(),
-    alt: z.string().min(1),
-  }),
-});
-
-const hexColorSchema = z
-  .string()
-  .regex(/^#[0-9a-f]{6}$/i, "Expected a #rrggbb color");
-
 export const photoCropsSchema = z.object({
   mobile: sitePathSchema,
   tablet: sitePathSchema,
   desktop: sitePathSchema,
   alt: z.string(),
-  /** The photo's tone, behind the text. */
+  /** Colour behind the text. */
   backdrop: hexColorSchema,
 });
-
-const productIdSchema = productSchema.shape.id;
 
 const featuredSectionSchema = z.object({
   layout: z.enum(["featured-above", "featured-beside"]),
@@ -167,9 +178,10 @@ export const exploreCategoriesSchema = z.object({
     .array(categoryTileSchema)
     .min(1)
     .superRefine((tiles, ctx) =>
-      rejectRepeatedCategories(
+      rejectRepeated(
         tiles.map(({ category }) => category),
         "category",
+        "Category",
         ctx,
       ),
     ),
@@ -190,10 +202,14 @@ export const homepageSchema = z.object({
 });
 
 export type Category = z.infer<typeof categorySchema>;
-/** A product as stored: its category is only an id. */
-export type ProductContent = z.output<typeof productsSchema>[number];
-/** A product with its category's name resolved from the categories data. */
-export type Product = ProductContent & { categoryName: string };
+export type ProductColor = z.infer<typeof colorSchema>;
+export type Seo = z.infer<typeof seoSchema>;
+export type SeoImage = z.infer<typeof seoImageSchema>;
+export type ProductContent = z.infer<typeof productSchema>;
+export type Product = Omit<ProductContent, "category"> & {
+  category: Category;
+  href: string;
+};
 export type HeroContent = z.infer<typeof heroSchema>;
 export type HeroVideo = z.infer<typeof heroVideoSchema>;
 export type Homepage = z.infer<typeof homepageSchema>;
@@ -202,9 +218,8 @@ export type CategorySectionContent = z.infer<typeof categorySectionSchema>;
 export type CategoryTileContent = z.infer<typeof categoryTileSchema>;
 export type FindUsContent = z.infer<typeof findUsSchema>;
 
-/** A tile with its category name and link resolved. */
-export type CategoryTileData = CategoryTileContent & {
-  categoryName: string;
+export type CategoryTileData = Omit<CategoryTileContent, "category"> & {
+  category: Category;
   href: string;
 };
 
@@ -213,11 +228,9 @@ export type ExploreCategoriesData = {
   tiles: CategoryTileData[];
 };
 
-/** A section with its category name and products resolved from their ids. */
 export type FeaturedSectionData = {
   layout: "featured-above" | "featured-beside";
-  category: string;
-  categoryName: string;
+  category: Category;
   subheading: string;
   featured: Product;
   image: PhotoCrops;
@@ -226,16 +239,14 @@ export type FeaturedSectionData = {
 
 export type BannerSectionData = {
   layout: "banner";
-  category: string;
-  categoryName: string;
+  category: Category;
   featured: Product;
   image: PhotoCrops;
 };
 
 export type CardsSectionData = {
   layout: "cards";
-  category: string;
-  categoryName: string;
+  category: Category;
   subheading: string;
   products: Product[];
 };

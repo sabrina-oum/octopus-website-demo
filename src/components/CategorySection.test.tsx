@@ -1,38 +1,27 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import type { CategorySectionData, Product } from "@/catalog";
+import type { Category, CategorySectionData } from "@/catalog";
+import { breakpointMedia } from "@/lib/breakpoints";
+import { kitchen as kitchenCategory, makeProduct } from "@/test/fixtures";
 import { CategorySection } from "./CategorySection";
 
-const categoryNames: Record<string, string> = {
-  kitchen: "Kitchen",
-  "hair-care": "Hair Care",
-  accessories: "Accessories",
-};
+const hairCare: Category = { id: "hair-care", name: "Hair Care" };
+const accessories: Category = { id: "accessories", name: "Accessories" };
 
-function product(id: string, name: string, category: string) {
-  return {
+function product(id: string, name: string, category: Category) {
+  return makeProduct({
     id,
-    slug: id,
     name,
     category,
-    categoryName: categoryNames[category] ?? category,
     shortDescription: `About the ${name}.`,
-    image: `/images/products/${id}.png`,
-    bestSeller: false,
-    hasPage: false,
-    href: "/products/countertop-blender",
-  } satisfies Product;
+  });
 }
 
-const blender = product("personal-blender", "Octopus Blender", "kitchen");
-const kettle = product("kettle", "Octopus Kettle", "kitchen");
-const dryer = product(
-  "ionic-hair-dryer",
-  "Octopus Ionic Hair Dryer",
-  "hair-care",
-);
-const powerBank = product("power-bank", "Octopus Power Bank", "accessories");
-const charger = product("car-charger", "Octopus Car Charger", "accessories");
+const blender = product("personal-blender", "Octopus Blender", kitchenCategory);
+const kettle = product("kettle", "Octopus Kettle", kitchenCategory);
+const dryer = product("ionic-hair-dryer", "Octopus Ionic Hair Dryer", hairCare);
+const powerBank = product("power-bank", "Octopus Power Bank", accessories);
+const charger = product("car-charger", "Octopus Car Charger", accessories);
 
 function photo(name: string) {
   return {
@@ -46,8 +35,7 @@ function photo(name: string) {
 
 const kitchen: CategorySectionData = {
   layout: "featured-above",
-  category: "kitchen",
-  categoryName: "Kitchen",
+  category: kitchenCategory,
   subheading: "Powerful appliances for everyday cooking",
   image: photo("kitchen"),
   featured: blender,
@@ -82,13 +70,16 @@ describe("CategorySection", () => {
     const cards = within(section("Kitchen")).getAllByRole("article");
 
     expect(
-      cards.map((card) => within(card).getByRole("heading").textContent),
-    ).toEqual(["Octopus Blender", "Octopus Kettle"]);
-    for (const card of cards) {
-      expect(
-        within(card).getByRole("link", { name: "Learn more" }),
-      ).toHaveAttribute("href", "/products/countertop-blender");
-    }
+      cards.map((card) => [
+        within(card).getByRole("heading").textContent,
+        within(card)
+          .getByRole("link", { name: "Learn more" })
+          .getAttribute("href"),
+      ]),
+    ).toEqual([
+      ["Octopus Blender", "/products/personal-blender"],
+      ["Octopus Kettle", "/products/kettle"],
+    ]);
   });
 
   it("loads the photo lazily, as it sits below the fold", () => {
@@ -99,13 +90,31 @@ describe("CategorySection", () => {
     ).toHaveAttribute("loading", "lazy");
   });
 
+  it("serves the mobile, tablet and desktop crops at their breakpoints", () => {
+    render(<CategorySection section={kitchen} />);
+
+    const img = screen.getByRole("img", { name: "A kitchen photo" });
+    const sources = img.closest("picture")!.querySelectorAll("source");
+    const crop = (media: string) =>
+      Array.from(sources).find((source) => source.media === media)?.srcset;
+
+    expect(crop(breakpointMedia.desktop)).toContain(
+      encodeURIComponent("/images/kitchen-desktop.jpg"),
+    );
+    expect(crop(breakpointMedia.tablet)).toContain(
+      encodeURIComponent("/images/kitchen-tablet.jpg"),
+    );
+    expect(img.getAttribute("src")).toContain(
+      encodeURIComponent("/images/kitchen-mobile.jpg"),
+    );
+  });
+
   it("names a banner section after its category and presents its product", () => {
     render(
       <CategorySection
         section={{
           layout: "banner",
-          category: "hair-care",
-          categoryName: "Hair Care",
+          category: hairCare,
           image: photo("hair-dryer"),
           featured: dryer,
         }}
@@ -121,7 +130,7 @@ describe("CategorySection", () => {
     ).toBeInTheDocument();
     expect(
       within(banner).getByRole("link", { name: "Learn more" }),
-    ).toHaveAttribute("href", "/products/countertop-blender");
+    ).toHaveAttribute("href", "/products/ionic-hair-dryer");
   });
 
   it("lists every product of a cards section", () => {
@@ -129,8 +138,7 @@ describe("CategorySection", () => {
       <CategorySection
         section={{
           layout: "cards",
-          category: "accessories",
-          categoryName: "Accessories",
+          category: accessories,
           subheading: "The little things",
           products: [powerBank, charger],
         }}

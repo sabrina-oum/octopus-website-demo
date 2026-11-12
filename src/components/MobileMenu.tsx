@@ -18,7 +18,7 @@ type MobileMenuProps = {
 export function MobileMenu({ links, cta }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
 
-  // The menu is hidden on desktop, so close it if the window widens.
+  // Hidden on desktop: close it if the window widens.
   useEffect(() => {
     if (!open) {
       return;
