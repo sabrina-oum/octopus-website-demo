@@ -72,13 +72,16 @@ describe("CategorySection", () => {
     expect(
       cards.map((card) => [
         within(card).getByRole("heading").textContent,
-        within(card)
-          .getByRole("link", { name: "Learn more" })
-          .getAttribute("href"),
+        within(card).getByRole("link").textContent,
+        within(card).getByRole("link").getAttribute("href"),
       ]),
     ).toEqual([
-      ["Octopus Blender", "/products/personal-blender"],
-      ["Octopus Kettle", "/products/kettle"],
+      [
+        "Octopus Blender",
+        "Learn more about Octopus Blender",
+        "/products/personal-blender",
+      ],
+      ["Octopus Kettle", "Learn more about Octopus Kettle", "/products/kettle"],
     ]);
   });
 
@@ -129,7 +132,9 @@ describe("CategorySection", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      within(banner).getByRole("link", { name: "Learn more" }),
+      within(banner).getByRole("link", {
+        name: "Learn more about Octopus Ionic Hair Dryer",
+      }),
     ).toHaveAttribute("href", "/products/ionic-hair-dryer");
   });
 

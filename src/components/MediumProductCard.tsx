@@ -1,6 +1,6 @@
 import type { Product } from "@/catalog";
 import { cx } from "@/lib/cx";
-import { ButtonLink } from "./Button";
+import { LearnMoreLink } from "./LearnMoreLink";
 import { ResponsiveImage } from "./ResponsiveImage";
 
 type MediumProductCardProps = {
@@ -21,15 +21,15 @@ export function MediumProductCard({
         "tablet:gap-4 tablet:px-8 tablet:pt-8",
         "desktop:gap-8",
         horizontal
-          ? "desktop:min-h-126 desktop:flex-row desktop:p-10 desktop:text-left"
-          : "desktop:px-20 desktop:pt-16 desktop:pb-0",
+          ? "desktop:relative desktop:min-h-126 desktop:flex-row desktop:p-10 desktop:text-left"
+          : "desktop:min-h-220 desktop:px-20 desktop:pt-16 desktop:pb-0",
       )}
     >
       <div
         className={cx(
           "flex flex-col items-center gap-6 tablet:gap-4 desktop:gap-8",
           horizontal
-            ? "desktop:w-75 desktop:shrink-0 desktop:items-start"
+            ? "desktop:relative desktop:z-10 desktop:w-75 desktop:shrink-0 desktop:items-start"
             : "desktop:max-w-112.5",
         )}
       >
@@ -41,7 +41,7 @@ export function MediumProductCard({
             {product.shortDescription}
           </p>
         </div>
-        <ButtonLink href={product.href}>Learn more</ButtonLink>
+        <LearnMoreLink product={product} />
       </div>
       <ResponsiveImage
         src={product.image}
@@ -50,12 +50,12 @@ export function MediumProductCard({
         sizes={{
           mobile: "100vw",
           tablet: "50vw",
-          desktop: horizontal ? "min(20rem, 25vw)" : "min(40rem, 45vw)",
+          desktop: horizontal ? "412px" : "600px",
         }}
         className={
           horizontal
-            ? "desktop:min-w-0 desktop:flex-1 desktop:self-stretch"
-            : undefined
+            ? "desktop:absolute desktop:top-1/2 desktop:right-0 desktop:left-62 desktop:w-auto desktop:-translate-y-1/2"
+            : "desktop:mt-auto desktop:w-[120%] desktop:shrink-0"
         }
       />
     </article>

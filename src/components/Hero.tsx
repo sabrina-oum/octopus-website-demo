@@ -52,7 +52,10 @@ export function Hero({ hero }: HeroProps) {
               {hero.description}
             </p>
           </div>
-          <ButtonLink href={hero.cta.href}>{hero.cta.label}</ButtonLink>
+          <ButtonLink href={hero.cta.href}>
+            {hero.cta.label}
+            <span className="sr-only">: {hero.title}</span>
+          </ButtonLink>
         </div>
       </Reveal>
     </section>

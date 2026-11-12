@@ -11,6 +11,7 @@ type ResponsiveImageProps = {
   sizes: ImageSizes;
   preload?: boolean;
   className?: string;
+  imageClassName?: string;
 };
 
 export function ResponsiveImage({
@@ -20,6 +21,7 @@ export function ResponsiveImage({
   sizes,
   preload = false,
   className,
+  imageClassName,
 }: ResponsiveImageProps) {
   return (
     <div
@@ -32,7 +34,7 @@ export function ResponsiveImage({
         fill
         sizes={toSizesAttribute(sizes)}
         preload={preload}
-        className="object-contain"
+        className={cx("object-contain", imageClassName)}
       />
     </div>
   );

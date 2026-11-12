@@ -2,7 +2,7 @@ import type { PhotoCrops, Product } from "@/catalog";
 import { backdropStyle } from "@/lib/backdrop";
 import { cx } from "@/lib/cx";
 import { ArtDirectedImage } from "./ArtDirectedImage";
-import { ButtonLink } from "./Button";
+import { LearnMoreLink } from "./LearnMoreLink";
 
 type HighlightProductCardProps = {
   product: Product;
@@ -46,7 +46,7 @@ export function HighlightProductCard({
             {product.shortDescription}
           </p>
         </div>
-        <ButtonLink href={product.href}>Learn more</ButtonLink>
+        <LearnMoreLink product={product} />
       </div>
       <div
         className={cx(

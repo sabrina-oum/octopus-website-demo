@@ -31,9 +31,10 @@ describe("FeaturedProductCard", () => {
   it("links « Learn more » to the product page given by the data", () => {
     render(<FeaturedProductCard product={indoorCamera} />);
 
-    expect(screen.getByRole("link", { name: "Learn more" })).toHaveAttribute(
-      "href",
-      "/products/indoor-camera",
-    );
+    expect(
+      screen.getByRole("link", {
+        name: "Learn more about Octopus Indoor Camera",
+      }),
+    ).toHaveAttribute("href", "/products/indoor-camera");
   });
 });

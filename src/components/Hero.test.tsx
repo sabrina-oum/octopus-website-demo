@@ -7,7 +7,7 @@ import { Hero } from "./Hero";
 const hairDryer: HeroContent = {
   title: "Octopus Ionic Hair Dryer",
   description: "Fast drying and less frizz",
-  cta: { label: "Learn more", href: "/products/countertop-blender" },
+  cta: { label: "Learn more", href: "/products/ionic-hair-dryer" },
 };
 
 describe("Hero", () => {
@@ -21,10 +21,9 @@ describe("Hero", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Fast drying and less frizz")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Learn more" })).toHaveAttribute(
-      "href",
-      "/products/countertop-blender",
-    );
+    const link = screen.getByRole("link", { name: /^Learn more/ });
+    expect(link).toHaveTextContent("Learn more: Octopus Ionic Hair Dryer");
+    expect(link).toHaveAttribute("href", "/products/ionic-hair-dryer");
   });
 
   it("is a landmark named after its title", () => {

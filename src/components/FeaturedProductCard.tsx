@@ -1,5 +1,5 @@
 import type { Product } from "@/catalog";
-import { ButtonLink } from "./Button";
+import { LearnMoreLink } from "./LearnMoreLink";
 import { ResponsiveImage } from "./ResponsiveImage";
 
 type FeaturedProductCardProps = {
@@ -19,14 +19,15 @@ export function FeaturedProductCard({ product }: FeaturedProductCardProps) {
             {product.shortDescription}
           </p>
         </div>
-        <ButtonLink href={product.href}>Learn more</ButtonLink>
+        <LearnMoreLink product={product} />
       </div>
       <div className="-mx-6 min-h-0 flex-1 self-stretch tablet:absolute tablet:inset-y-0 tablet:left-80.25 tablet:mx-0 tablet:w-103.25 desktop:left-131.75 desktop:w-124">
         <ResponsiveImage
           src={product.image}
           alt={product.name}
-          sizes={{ mobile: "320px", tablet: "413px", desktop: "496px" }}
+          sizes={{ mobile: "320px", tablet: "413px", desktop: "589px" }}
           className="h-full"
+          imageClassName="desktop:object-cover"
         />
       </div>
     </article>

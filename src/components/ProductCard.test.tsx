@@ -36,9 +36,10 @@ describe("ProductCard", () => {
   it("links « Learn more » to the product page given by the data", () => {
     render(<ProductCard product={powerBoard} />);
 
-    expect(screen.getByRole("link", { name: "Learn more" })).toHaveAttribute(
-      "href",
-      "/products/power-board-usb",
-    );
+    expect(
+      screen.getByRole("link", {
+        name: "Learn more about Octopus Power Board with USB Charging",
+      }),
+    ).toHaveAttribute("href", "/products/power-board-usb");
   });
 });
