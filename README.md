@@ -2,7 +2,7 @@
 
 A demo of two pages of the Octopus website, the Homepage and the Countertop Blender product page, built from the Figma « Flows » at three breakpoints.
 
-- Live demo: _to add_
+- Live demo: https://octopus-website-demo-six.vercel.app
 - Lighthouse reports (mobile): _to add_
 
 ## Setup
@@ -77,8 +77,12 @@ Built with Claude Code. It wrote the code and tests from tickets I wrote, read t
 
 Where I corrected it:
 
-- It changed the size of a category card to fix a crop issue; I had it restore the Figma size.
+- It split each product into two content types and sent cards with no page content to « Coming soon »; as a CMS will come later, I had each product made one record, with one `Product` type and every card linking to its own page.
 - It showed every product of a category on the Homepage; I asked for curated sections.
-- It darkened the photos with a gray gradient; I asked for the photo's own color.
-- It placed the Best sellers photo 46 px off on tablet and 25 px off on desktop; I had it measured against Figma and fixed.
+- Its end-to-end tests hard-coded product names and copy; as the content will come from a CMS, I had them read it from the page.
 - Its code had long comments and clever generic types; I had it simplified to plain types and short comments.
+- It said The Warehouse logo matched Figma; I had it compare them side by side, which showed errors in the badge and the wordmark.
+- It added a « Special » button style and a product description that the visible Figma doesn't have; I had both removed.
+- It kept the gallery and feature cards at a 3:4 ratio at every width, which left a large gap at 746 px; I had it use the Figma width and height.
+
+I also had smaller mismatches with Figma fixed: a resized category card, an offset Best sellers photo, the mobile « Where to buy » bar, text covering the product in two photos, and photo fades that didn't match the photos.
