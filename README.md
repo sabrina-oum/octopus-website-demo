@@ -24,7 +24,7 @@ Before the first `yarn test`, install the Playwright browser: `yarn playwright i
 
 ## Architecture
 
-Next.js 16 (App Router, static pages), React 19, TypeScript, Tailwind CSS 4.
+Next.js 16 (App Router, static pages), React 19, TypeScript, Tailwind CSS 4. The full picture is in [architecture.md](architecture.md).
 
 - **`src/app`**: the routes: `/`, `/products/[slug]` and a `/coming-soon` placeholder for links outside the two pages.
 - **`src/catalog`**: the content. `products.json` holds every product and the content of its page in one entry, the way a CMS product type would: what the cards show (name, category, photo…), what its page shows (description, colours, a gallery of photo and feature-card blocks in page order, specifications and downloads) and an optional SEO override, field by field, that falls back to the product's name, short description and the site's share image. `homepage.json` holds the Homepage hero, SEO, sections, category tiles and « Find us at » banner. Zod schemas validate them at build time, so bad content fails the build with the path of the error. Pages read content only through the functions of `index.ts`.
