@@ -1,217 +1,217 @@
-# Spec : démo du site Octopus (test technique Product Engineer Web)
+# Spec: Octopus website demo (Product Engineer Web technical test)
 
-Statut : `ready-for-agent` (fichier local, aucun outil de tickets configuré)
-Échéance : vendredi 13 novembre 2026 à 17 h, objectif interne jeudi 12 au soir
+Status: `ready-for-agent` (local file, no issue tracker configured)
+Deadline: Friday 13 November 2026 at 17:00, internal target Thursday the 12th in the evening
 
 ## Problem Statement
 
-Sabrina a reçu un test technique pour un poste de Product Engineer Web. Elle doit livrer une petite démo du site d'électronique grand public Octopus : la Homepage et la fiche produit du Countertop Blender, fidèles au Figma sur trois breakpoints.
+Sabrina received a technical test for a Product Engineer Web role. She must deliver a small demo of the Octopus consumer electronics website: the Homepage and the Countertop Blender product page, faithful to the Figma at three breakpoints.
 
-La difficulté n'est pas le volume de pages, mais le niveau d'exigence sur peu de temps : fidélité au design, comportement responsive, composants réutilisables pilotés par les données, performance, accessibilité, tests et documentation. Les outils d'IA sont obligatoires, mais Sabrina doit pouvoir expliquer chaque partie du code et défendre ses compromis lors d'un appel de revue de 45 minutes.
+The difficulty is not the number of pages but the standard expected in a short time: design fidelity, responsive behaviour, reusable data-driven components, performance, accessibility, tests and documentation. AI tools are required, but Sabrina must be able to explain every part of the code and defend her trade-offs during a 45-minute review call.
 
-Le fichier Figma a l'export, la copie et le partage désactivés. Les valeurs de design ne se lisent que dans l'interface, avec une session connectée. Les images et logos sont fournis à part, mais pas les icônes.
+The Figma file has export, copying and sharing disabled. Design values can only be read in the interface, with a signed-in session. Images and logos are provided separately, but icons are not.
 
 ## Solution
 
-Un site Next.js généré au build, déployé sur Vercel, dont les deux pages reproduisent le Figma à chaque breakpoint et s'adaptent de façon fluide entre eux.
+A Next.js site generated at build time and deployed on Vercel, whose two pages reproduce the Figma at each breakpoint and adapt fluidly between them.
 
-Le contenu vient d'un fichier JSON local validé au build, de sorte qu'ajouter un produit aux données suffit à l'afficher dans la bonne section. Les composants sont réutilisés sur les deux pages et les tokens du Figma sont définis une seule fois. Les éléments interactifs fonctionnent à la souris, au tactile et au clavier.
+Content comes from a local JSON file validated at build time, so that adding a product to the data is enough to show it in the right section. Components are reused across both pages and the Figma tokens are defined once. Interactive elements work with a mouse, touch and the keyboard.
 
-Le travail avance par petits lots relus par Sabrina avant chaque commit, afin qu'elle connaisse le code à l'arrivée et que la section du README sur l'usage de l'IA repose sur de vraies corrections.
+Work moves forward in small batches that Sabrina reviews before each commit, so that she knows the code by the end and the README's AI section is based on real corrections.
 
 ## User Stories
 
-### Navigation et en-tête
+### Navigation and header
 
-1. En tant que visiteur sur desktop, je veux voir la navigation complète et le bouton « Where to buy », afin d'accéder directement aux sections principales.
-2. En tant que visiteur sous 1200 px, je veux que la navigation se replie dans un menu, afin que l'en-tête reste lisible sur un petit écran.
-3. En tant que visiteur mobile, je veux ouvrir et fermer le menu d'un geste, afin de naviguer sans perdre ma place.
-4. En tant qu'utilisateur du clavier, je veux ouvrir le menu, le parcourir et le fermer sans souris, afin d'accéder à toute la navigation.
-5. En tant qu'utilisateur du clavier, je veux que la touche Escape ferme le menu et que le focus revienne sur son bouton d'ouverture, afin de ne pas perdre ma position.
-6. En tant qu'utilisateur de lecteur d'écran, je veux que l'état ouvert ou fermé du menu soit annoncé, afin de comprendre ce qui se passe.
+1. As a desktop visitor, I want to see the full navigation and the « Where to buy » button, so that I can go straight to the main sections.
+2. As a visitor below 1200 px, I want the navigation to fold into a menu, so that the header stays readable on a small screen.
+3. As a mobile visitor, I want to open and close the menu with one gesture, so that I can navigate without losing my place.
+4. As a keyboard user, I want to open the menu, move through it and close it without a mouse, so that I can reach the whole navigation.
+5. As a keyboard user, I want the Escape key to close the menu and focus to return to its open button, so that I don't lose my position.
+6. As a screen reader user, I want the menu's open or closed state to be announced, so that I understand what is happening.
 
 ### Homepage
 
-7. En tant que visiteur, je veux voir un hero consacré à l'Octopus Ionic Hair Dryer, afin de découvrir immédiatement le produit mis en avant.
-8. En tant que visiteur, je veux parcourir les meilleures ventes, afin de repérer rapidement les produits populaires.
-9. En tant que visiteur sur desktop, je veux faire défiler le carrousel avec des flèches, afin de voir tous les produits.
-10. En tant que visiteur sur desktop, je veux que les flèches soient désactivées au début et à la fin du carrousel, afin de savoir quand il n'y a plus rien à voir.
-11. En tant que visiteur, je veux des points de pagination, afin de savoir où j'en suis dans le carrousel.
-12. En tant que visiteur sur écran tactile, je veux faire défiler le carrousel en glissant le doigt, afin d'utiliser un geste naturel.
-13. En tant qu'utilisateur du clavier, je veux atteindre et utiliser les commandes du carrousel, afin d'accéder aux mêmes produits que les autres visiteurs.
-14. En tant que visiteur, je veux voir les sections Kitchen, Hair Care, Home Security et Accessories, afin d'explorer l'offre par catégorie.
-15. En tant que visiteur sur desktop et tablette, je veux une grande carte mise en avant accompagnée de cartes plus petites, comme dans le design, afin de comprendre la hiérarchie des produits.
-16. En tant que visiteur mobile, je veux que les rangées deviennent des colonnes empilées, afin de lire les cartes confortablement.
-17. En tant que visiteur, je veux que chaque carte affiche le nom, la description courte et l'image du produit, afin de décider si elle m'intéresse.
-18. En tant que visiteur, je veux que « Learn more » sur le Countertop Blender ouvre sa fiche, afin d'en savoir plus.
-19. En tant que visiteur, je veux que « Learn more » sur les autres produits mène aussi à la fiche disponible, afin de ne jamais tomber sur un lien cassé.
-20. En tant que visiteur, je veux utiliser les tuiles « Explore all categories », afin d'aller vers une catégorie ou une page d'attente.
-21. En tant que visiteur, je veux voir le bandeau « Find us at », afin de savoir que des points de vente existent.
-22. En tant que visiteur, je veux un footer conforme au design à chaque breakpoint, afin de retrouver les liens secondaires.
+7. As a visitor, I want to see a hero dedicated to the Octopus Ionic Hair Dryer, so that I immediately discover the featured product.
+8. As a visitor, I want to browse the best sellers, so that I can quickly spot popular products.
+9. As a desktop visitor, I want to scroll the carousel with arrows, so that I can see every product.
+10. As a desktop visitor, I want the arrows to be disabled at the start and end of the carousel, so that I know when there is nothing more to see.
+11. As a visitor, I want pagination dots, so that I know where I am in the carousel.
+12. As a touch screen visitor, I want to scroll the carousel by swiping, so that I can use a natural gesture.
+13. As a keyboard user, I want to reach and use the carousel controls, so that I can access the same products as other visitors.
+14. As a visitor, I want to see the Kitchen, Hair Care, Home Security and Accessories sections, so that I can explore the range by category.
+15. As a desktop and tablet visitor, I want a large featured card with smaller cards beside it, as in the design, so that I understand the product hierarchy.
+16. As a mobile visitor, I want rows to become stacked columns, so that I can read the cards comfortably.
+17. As a visitor, I want each card to show the product's name, short description and image, so that I can decide whether it interests me.
+18. As a visitor, I want « Learn more » on the Countertop Blender to open its product page, so that I can find out more.
+19. As a visitor, I want « Learn more » on the other products to also lead to the available product page, so that I never land on a broken link.
+20. As a visitor, I want to use the « Explore all categories » tiles, so that I can go to a category or a placeholder page.
+21. As a visitor, I want to see the « Find us at » banner, so that I know there are stores that sell the products.
+22. As a visitor, I want a footer that matches the design at each breakpoint, so that I can find the secondary links.
 
-### Fiche produit
+### Product page
 
-23. En tant que visiteur, je veux voir le titre, la description, le sélecteur de couleur et « Where to buy », afin de comprendre le produit et la marche à suivre.
-24. En tant que visiteur, je veux choisir une couleur et voir l'état sélectionné se mettre à jour, afin de savoir quelle option est active.
-25. En tant qu'utilisateur du clavier ou de lecteur d'écran, je veux utiliser le sélecteur et connaître la couleur choisie, afin de ne pas dépendre de la seule perception des couleurs.
-26. En tant que visiteur, je veux parcourir la galerie d'images et les cartes de fonctionnalités, afin de comprendre les atouts du produit.
-27. En tant que visiteur, je veux déplier et replier Technical specifications, Dimensions & weight, Product information et Downloads, afin de lire seulement ce qui m'intéresse.
-28. En tant qu'utilisateur du clavier, je veux piloter ces sections sans souris, afin d'accéder à tout leur contenu.
-29. En tant qu'utilisateur de lecteur d'écran, je veux entendre si une section est ouverte ou fermée, afin de savoir où j'en suis.
-30. En tant que visiteur, je veux retrouver le carrousel Best sellers en bas de fiche, afin de continuer à explorer.
+23. As a visitor, I want to see the title, description, colour selector and « Where to buy », so that I understand the product and what to do next.
+24. As a visitor, I want to choose a colour and see the selected state update, so that I know which option is active.
+25. As a keyboard or screen reader user, I want to use the selector and know which colour is chosen, so that I don't depend on colour perception alone.
+26. As a visitor, I want to browse the image gallery and the feature cards, so that I understand the product's strengths.
+27. As a visitor, I want to expand and collapse Technical specifications, Dimensions & weight, Product information and Downloads, so that I only read what interests me.
+28. As a keyboard user, I want to control these sections without a mouse, so that I can reach all their content.
+29. As a screen reader user, I want to hear whether a section is open or closed, so that I know where I am.
+30. As a visitor, I want to find the Best sellers carousel at the bottom of the product page, so that I can keep exploring.
 
-### Responsive, visuel et performance
+### Responsive, visuals and performance
 
-31. En tant que visiteur, je veux que les pages restent propres à n'importe quelle largeur, y compris entre les breakpoints, afin de ne jamais voir de mise en page cassée.
-32. En tant que visiteur, je ne veux jamais de défilement horizontal de la page, afin de garder une lecture confortable.
-33. En tant que visiteur sur connexion mobile, je veux que les pages se chargent vite, afin de ne pas attendre.
-34. En tant que visiteur, je veux que les images aient le bon format et que la page ne saute pas pendant leur chargement, afin de garder ma position.
-35. En tant que visiteur, je veux que les contenus apparaissent avec l'animation prévue au défilement, afin de profiter de l'expérience conçue.
-36. En tant que visiteur sensible aux mouvements, je veux que l'animation se limite à un fondu lorsque j'ai activé la réduction des animations, afin d'éviter l'inconfort.
-37. En tant que visiteur, je veux voir le contenu même si le JavaScript ne se charge pas, afin que le site reste utilisable.
-38. En tant que visiteur, je veux voir des états de survol et de focus cohérents avec le design, afin de savoir sur quoi j'agis.
-39. En tant que visiteur sur les derniers Chrome, Safari, Firefox, Edge, iOS Safari ou Android Chrome, je veux le même fonctionnement, afin de ne pas être pénalisé par mon navigateur.
+31. As a visitor, I want the pages to stay clean at any width, including between breakpoints, so that I never see a broken layout.
+32. As a visitor, I never want the page to scroll horizontally, so that reading stays comfortable.
+33. As a visitor on a mobile connection, I want the pages to load fast, so that I don't have to wait.
+34. As a visitor, I want images to have the right format and the page not to jump while they load, so that I keep my position.
+35. As a visitor, I want content to appear with the designed scroll animation, so that I enjoy the intended experience.
+36. As a motion-sensitive visitor, I want the animation to be limited to a fade when I have turned on reduced motion, so that I avoid discomfort.
+37. As a visitor, I want to see the content even if JavaScript does not load, so that the site stays usable.
+38. As a visitor, I want hover and focus states consistent with the design, so that I know what I am acting on.
+39. As a visitor on the latest Chrome, Safari, Firefox, Edge, iOS Safari or Android Chrome, I want the same behaviour, so that my browser does not put me at a disadvantage.
 
-### Liens hors périmètre et référencement
+### Out-of-scope links and SEO
 
-40. En tant que visiteur, je veux qu'un lien vers une page non construite mène à une page « Coming soon », afin de comprendre que le contenu n'existe pas encore.
-41. En tant que moteur de recherche, je veux un titre et une description propres à chaque page, afin d'indexer correctement le contenu.
-42. En tant que personne partageant un lien, je veux des balises Open Graph sur les deux pages, afin que l'aperçu soit soigné.
+40. As a visitor, I want a link to a page that isn't built to lead to a « Coming soon » page, so that I understand the content doesn't exist yet.
+41. As a search engine, I want a title and description specific to each page, so that I can index the content correctly.
+42. As someone sharing a link, I want Open Graph tags on both pages, so that the preview looks good.
 
-### Contenu et maintenance
+### Content and maintenance
 
-43. En tant que développeuse, je veux ajouter un produit dans les données pour qu'il apparaisse dans la bonne section, afin de ne pas modifier le balisage.
-44. En tant que développeuse, je veux qu'une donnée invalide fasse échouer le build avec un message clair, afin qu'une erreur de contenu n'arrive pas en production.
-45. En tant que développeuse, je veux que les pages n'accèdent aux données que par des fonctions asynchrones, afin de pouvoir brancher plus tard une API ou un CMS sans les modifier.
-46. En tant que développeuse, je veux des tokens de design définis une seule fois, afin de changer une valeur à un seul endroit.
-47. En tant que développeuse, je veux que Radix et Embla restent internes à nos composants, afin de pouvoir remplacer une librairie sans toucher aux pages.
-48. En tant que développeuse, je veux qu'une fiche produit soit créée à partir d'un slug, afin d'ajouter facilement d'autres fiches.
-49. En tant que développeuse, je veux des modèles strictement typés sans `any`, afin de détecter les erreurs à la compilation.
+43. As a developer, I want to add a product to the data so that it appears in the right section, without changing the markup.
+44. As a developer, I want invalid data to fail the build with a clear message, so that a content error never reaches production.
+45. As a developer, I want pages to access data only through async functions, so that an API or CMS can be connected later without changing them.
+46. As a developer, I want design tokens defined once, so that I change a value in one place.
+47. As a developer, I want Radix and Embla to stay inside our components, so that a library can be replaced without touching the pages.
+48. As a developer, I want a product page to be built from a slug, so that other product pages are easy to add.
+49. As a developer, I want strictly typed models with no `any`, so that errors are caught at compile time.
 
-### Livraison et évaluation
+### Delivery and evaluation
 
-50. En tant qu'évaluateur, je veux un historique de petits commits explicites, afin de comprendre la progression du travail.
-51. En tant qu'évaluateur, je veux un README couvrant l'installation, l'architecture, les composants, les compromis, les hypothèses et les améliorations possibles, afin d'évaluer le raisonnement.
-52. En tant qu'évaluateur, je veux savoir quels outils d'IA ont été utilisés, pour quelles parties et où leur sortie a été corrigée, afin d'évaluer cet usage.
-53. En tant qu'évaluateur, je veux lancer tous les tests avec une seule commande, afin de les vérifier facilement.
-54. En tant qu'évaluateur, je veux un lien en ligne, afin de tester le site sans l'installer.
-55. En tant qu'évaluateur, je veux les rapports Lighthouse mobile des deux pages, afin de vérifier les objectifs.
-56. En tant que candidate, je veux relire chaque lot avant son commit, afin de pouvoir expliquer tout le code lors de l'appel.
+50. As an evaluator, I want a history of small, explicit commits, so that I understand how the work progressed.
+51. As an evaluator, I want a README covering setup, architecture, components, trade-offs, assumptions and possible improvements, so that I can assess the reasoning.
+52. As an evaluator, I want to know which AI tools were used, for which parts and where their output was corrected, so that I can assess that use.
+53. As an evaluator, I want to run every test with a single command, so that I can check them easily.
+54. As an evaluator, I want a live link, so that I can try the site without installing it.
+55. As an evaluator, I want the mobile Lighthouse reports for both pages, so that I can check the targets.
+56. As the candidate, I want to review each batch before its commit, so that I can explain all the code during the call.
 
 ## Implementation Decisions
 
-### Stack et rendu
+### Stack and rendering
 
-- Next.js avec App Router, React, TypeScript strict sans `any`, et Yarn.
-- Pages générées au build. Le contenu est identique pour tous les visiteurs, donc aucun rendu à la demande n'est nécessaire.
-- Server Components par défaut. Seuls le menu, le carrousel, l'accordéon, le sélecteur de couleur et le composant de révélation passent côté client.
-- Le carrousel reçoit les cartes déjà rendues côté serveur en tant qu'enfants.
+- Next.js with the App Router, React, strict TypeScript with no `any`, and Yarn.
+- Pages generated at build time. The content is the same for every visitor, so no on-demand rendering is needed.
+- Server Components by default. Only the menu, the carousel, the accordion, the colour selector and the reveal component run on the client.
+- The carousel receives the cards, already rendered on the server, as children.
 
-### Design et tokens
+### Design and tokens
 
-- Tailwind v4, avec les couleurs, typographies et espacements définis une seule fois dans la configuration de thème.
-- Breakpoints du design system : mobile sous 810 px, tablette de 810 à 1199 px, desktop à partir de 1200 px.
-- Marges de page : 16 px en mobile, 32 px en tablette, 48 px en desktop.
-- Largeur fluide sur tous les breakpoints, limitée à 1344 px en desktop. La grille repose sur Flexbox.
-- Les valeurs sont relevées dans le panneau Properties du Figma, sur les pages Flows et Design System, avec une session connectée. La couleur d'accent connue est `#DE2027` (`Alias tokens/Color/Accent`).
-- La police doit être identifiée dans le Figma. Si elle n'est pas libre de droits, on utilise l'équivalent le plus proche et on le note dans le README.
+- Tailwind v4, with colours, typography and spacing defined once in the theme configuration.
+- Design system breakpoints: mobile below 810 px, tablet from 810 to 1199 px, desktop from 1200 px.
+- Page margins: 16 px on mobile, 32 px on tablet, 48 px on desktop.
+- Fluid width at every breakpoint, capped at 1344 px on desktop. The grid is built on Flexbox.
+- Values are read in the Figma Properties panel, on the Flows and Design System pages, with a signed-in session. The known accent colour is `#DE2027` (`Alias tokens/Color/Accent`).
+- The font must be identified in the Figma. If it isn't free to use, the closest equivalent is used and noted in the README.
 
 ### Modules
 
-- **Couche de données** : point d'entrée unique du contenu, avec des fonctions asynchrones comme `getProducts()` et `getProductBySlug(slug)`. Elle valide le JSON avec un schéma Zod au build. Elle joue le rôle de mock API et sera le seul module à modifier pour brancher un CMS ou une API.
-- **Modèles typés** : les types `Product`, catégorie et section dérivent des schémas. Le produit suit la forme du sujet, adaptable : `id`, `slug`, `name`, `category` (`kitchen`, `home-security`, `hair-care`, `accessories`), `shortDescription`, `image`, `bestSeller`, `colours` et `specs` optionnels.
-- **Composants réutilisables** : carte produit, carrousel, en-tête de section (`SectionHeader`), accordéon, bouton et icône, utilisés sur les deux pages.
-- **En-tête et footer du site** : composants `Header` et `Footer`, rendus une seule fois dans le layout racine. L'en-tête de section garde le nom `SectionHeader` pour ne pas être confondu avec le `Header` du site.
-- **Carrousel** : API propre au projet, Embla en interne. Gère les flèches, les points, les états désactivés et le swipe.
-- **Accordéon et menu mobile** : API propre au projet, Radix en interne. Le menu s'appuie sur Dialog pour le focus et Escape.
-- **Icon** : icônes Lucide ajustées aux tailles de 16 et 24 px et aux traits du design system. C'est le seul module à modifier si Octopus fournit les fichiers.
-- **Reveal** : composant maison sans librairie d'animation, basé sur `IntersectionObserver` et CSS.
-- **Images** : `next/image`, avec dimensions ou ratios explicites, chargement différé sous la ligne de flottaison et priorité au visuel principal. Les fichiers au nom haché sont renommés de façon lisible, et seules les images utilisées sont copiées dans le projet.
+- **Data layer**: the single entry point for content, with async functions such as `getProducts()` and `getProductBySlug(slug)`. It validates the JSON with a Zod schema at build time. It acts as the mock API and will be the only module to change to connect a CMS or an API.
+- **Typed models**: the `Product`, category and section types derive from the schemas. The product follows the brief's shape, which may be adapted: `id`, `slug`, `name`, `category` (`kitchen`, `home-security`, `hair-care`, `accessories`), `shortDescription`, `image`, `bestSeller`, and optional `colours` and `specs`.
+- **Reusable components**: product card, carousel, section header (`SectionHeader`), accordion, button and icon, used on both pages.
+- **Site header and footer**: `Header` and `Footer` components, rendered once in the root layout. The section header keeps the name `SectionHeader` so it isn't confused with the site's `Header`.
+- **Carousel**: a project-specific API, with Embla inside. It handles the arrows, the dots, the disabled states and swiping.
+- **Accordion and mobile menu**: a project-specific API, with Radix inside. The menu relies on Dialog for focus and Escape.
+- **Icon**: Lucide icons adjusted to the design system's 16 and 24 px sizes and stroke widths. It is the only module to change if Octopus provides the files.
+- **Reveal**: a home-made component with no animation library, based on `IntersectionObserver` and CSS.
+- **Images**: `next/image`, with explicit dimensions or ratios, lazy loading below the fold and priority for the main visual. Files with hashed names are renamed readably, and only the images used are copied into the project.
 
-### Animation (Motion Documentation du Figma)
+### Animation (Figma Motion Documentation)
 
-- Déclenchement à l'entrée de la section dans l'écran, une seule fois, sans animation de sortie.
-- Opacité de 0 à 1 et translation verticale de 60 px à 0, ou 30 px à 0 pour les blocs de texte seul.
-- Transition `ease-out`, durée 1,2 s, délai 0,1 s, `will-change: transform` sur la cible.
-- Les éléments d'une même section apparaissent ensemble, sans décalage.
-- Avec `prefers-reduced-motion`, opacité seule, sans déplacement.
-- L'état masqué ne s'applique que si le JavaScript est actif, afin que le contenu reste visible sans lui.
-- La liste exacte des éléments concernés suit les blocs « Applies to » de la Motion Documentation. Les entrées visant des pages hors périmètre sont ignorées.
-- Le Figma est suivi aussi sur le hero. Si le score Lighthouse mobile passe sous 90, on proposera d'alléger l'animation du hero uniquement, et le compromis sera noté dans le README.
+- Triggered once, when the section enters the screen, with no exit animation.
+- Opacity from 0 to 1 and a vertical translation from 60 px to 0, or from 30 px to 0 for text-only blocks.
+- `ease-out` transition, 1.2 s duration, 0.1 s delay, `will-change: transform` on the target.
+- Elements in the same section appear together, with no stagger.
+- With `prefers-reduced-motion`, opacity only, with no movement.
+- The hidden state only applies when JavaScript is active, so the content stays visible without it.
+- The exact list of animated elements follows the « Applies to » blocks of the Motion Documentation. Entries for out-of-scope pages are ignored.
+- The Figma is followed on the hero too. If the mobile Lighthouse score drops below 90, lightening the hero animation only will be proposed, and the trade-off noted in the README.
 
 ### Routes
 
-- La fiche produit est servie par une route dynamique basée sur le slug, générée au build pour les produits ayant une fiche complète. Seul le Countertop Blender en a une.
-- Tous les « Learn more » mènent à la fiche du Countertop Blender.
-- Les liens hors des deux pages mènent à une page unique « Coming soon ». Les tuiles de catégories mènent à une ancre ou à cette page.
+- The product page is served by a dynamic route based on the slug, generated at build time for products with a complete page. Only the Countertop Blender has one.
+- Every « Learn more » leads to the Countertop Blender's page.
+- Links outside the two pages lead to a single « Coming soon » page. Category tiles lead to an anchor or to that page.
 
-### Méthode, dépôt et déploiement
+### Method, repository and deployment
 
-- Travail par petits lots. Sabrina relit et teste chaque lot. Les étapes très simples peuvent être regroupées.
-- **L'agent ne fait jamais de commit : Sabrina les fait tous elle-même.** Quand un lot est validé, l'agent lui signale simplement qu'un commit est à faire, puis attend qu'elle l'ait fait avant de passer au lot suivant.
-- Un journal note uniquement les corrections réellement apportées au code généré, et alimente la section IA du README.
-- Dépôt GitHub public nommé `octopus-website-demo`, créé uniquement avec l'accord de Sabrina.
-- Le dossier de matériel fourni est exclu de Git : il contient le sujet, cette spec et des fichiers non utilisés.
-- Vercel est relié au dépôt par Sabrina, avec son propre compte. Le premier déploiement a lieu dès la fin de l'installation, afin de mesurer Lighthouse sur le site réel tout au long du travail.
-- Site en anglais, comme le Figma, sans multilingue.
+- Work in small batches. Sabrina reviews and tests each batch. Very simple steps can be grouped.
+- **The agent never commits: Sabrina makes every commit herself.** When a batch is approved, the agent simply tells her a commit is due, then waits until she has made it before moving on to the next batch.
+- A log records only the corrections actually made to generated code, and feeds the README's AI section.
+- A public GitHub repository named `octopus-website-demo`, created only with Sabrina's approval.
+- The folder of provided material is excluded from Git: it holds the brief, this spec and unused files.
+- Sabrina connects Vercel to the repository with her own account. The first deployment happens as soon as setup is done, so Lighthouse can be measured on the real site throughout the work.
+- Site in English, like the Figma, with no localisation.
 
-### Objectifs chiffrés
+### Measurable targets
 
-- Lighthouse Performance d'au moins 90 sur la Homepage en mobile.
-- Lighthouse Accessibility d'au moins 90.
-- Contrastes WCAG AA, focus visibles, navigation complète au clavier, HTML sémantique et textes alternatifs.
+- Lighthouse Performance of at least 90 on the Homepage on mobile.
+- Lighthouse Accessibility of at least 90.
+- WCAG AA contrast, visible focus, full keyboard navigation, semantic HTML and alt text.
 
 ## Testing Decisions
 
-### Ce qui fait un bon test
+### What makes a good test
 
-- Un test vérifie un comportement observable, jamais un détail d'implémentation.
-- Les tests passent par nos composants et sélectionnent les éléments comme un utilisateur : rôles, noms accessibles, clavier et clics.
-- Aucun test ne vérifie les internes de Radix ou d'Embla, afin qu'ils restent valables si une librairie est remplacée.
+- A test checks observable behaviour, never an implementation detail.
+- Tests go through our components and select elements the way a user would: roles, accessible names, keyboard and clicks.
+- No test checks the internals of Radix or Embla, so that tests stay valid if a library is replaced.
 
-### Points de test
+### Test seams
 
-1. **Site réel, avec Playwright sur le site buildé** :
-   - parcours Homepage → « Learn more » → fiche produit ;
-   - défilement réel du carrousel avec Embla, y compris les états de début et de fin ;
-   - ouverture, fermeture et Escape du menu mobile.
-2. **Composants publics, avec Vitest et Testing Library** :
-   - accordéon : ouverture, fermeture, ARIA et clavier ;
-   - menu : ouverture, fermeture, Escape et clavier ;
-   - sélecteur de couleur : mise à jour de l'état sélectionné ;
-   - carte produit : rendu depuis les données et lien « Learn more » ;
-   - carrousel : flèches, points et états désactivés.
-3. **Couche de données, avec Vitest** :
-   - lecture correcte de données valides ;
-   - rejet d'une entrée invalide ;
-   - comportement avec un slug inconnu.
+1. **Real site, with Playwright on the built site**:
+   - Homepage → « Learn more » → product page journey;
+   - real carousel scrolling with Embla, including the start and end states;
+   - opening, closing and Escape for the mobile menu.
+2. **Public components, with Vitest and Testing Library**:
+   - accordion: opening, closing, ARIA and keyboard;
+   - menu: opening, closing, Escape and keyboard;
+   - colour selector: updating the selected state;
+   - product card: rendering from data and the « Learn more » link;
+   - carousel: arrows, dots and disabled states.
+3. **Data layer, with Vitest**:
+   - valid data is read correctly;
+   - an invalid entry is rejected;
+   - behaviour with an unknown slug.
 
-### Précisions
+### Details
 
-- Radix tourne réellement dans les tests de composants.
-- Embla est la seule exception : jsdom ne calcule ni dimensions ni défilement. Dans Vitest, il est remplacé par un faux pour simuler le début et la fin du carrousel, et son fonctionnement réel est couvert par Playwright.
-- Une seule commande, `yarn test`, lance les suites Vitest et Playwright.
-- Les breakpoints et la compatibilité navigateurs sont vérifiés manuellement avant la livraison, en plus des parcours automatisés.
-- Prior art : aucun, le projet part de zéro. Les premiers tests servent de référence.
+- Radix really runs in the component tests.
+- Embla is the only exception: jsdom computes neither dimensions nor scrolling. In Vitest it is replaced by a fake that simulates the start and end of the carousel, and its real behaviour is covered by Playwright.
+- A single command, `yarn test`, runs the Vitest and Playwright suites.
+- Breakpoints and browser compatibility are checked manually before delivery, on top of the automated journeys.
+- Prior art: none, the project starts from scratch. The first tests serve as the reference.
 
 ## Out of Scope
 
-- Panier, paiement ou tout parcours d'achat.
-- Comptes utilisateurs.
-- Recherche.
-- CMS ou vrai backend.
-- Autres pages produit ou de catégorie.
-- Store locator derrière « Find us at ».
-- Formulaires de contact.
-- Bannières de cookies.
-- Multilingue.
-- Pixel-perfect strict : l'objectif est un espacement cohérent et un comportement correct entre les breakpoints.
+- Cart, checkout or any purchase flow.
+- User accounts.
+- Search.
+- A CMS or a real backend.
+- Other product or category pages.
+- The store locator behind « Find us at ».
+- Contact forms.
+- Cookie banners.
+- Localisation.
+- Strict pixel-perfection: the goal is consistent spacing and correct behaviour between breakpoints.
 
 ## Further Notes
 
-- Le Figma est lisible avec une session connectée, mais l'export, la copie et le partage y sont désactivés. L'API Figma renvoie une erreur 403 « File not exportable », et le serveur MCP refuse aussi l'accès. Les valeurs sont donc relevées à la main dans l'interface, sans contourner cette restriction.
-- Les 47 images et logos fournis sont dans le dossier `Octopus_assets`. Les icônes n'y sont pas : Sabrina envoie un e-mail à Octopus pour les demander, et Lucide sert de solution en attendant.
-- Toute hypothèse est notée dans le README, comme le demande le sujet.
-- Ordre de priorité : les 10 critères d'acceptation d'abord, les finitions ensuite. La fidélité et le responsive pèsent chacun 25 %, le code et les composants 20 %, la performance et l'accessibilité 15 %, les tests et la documentation 15 %.
-- L'appel de revue de 45 minutes comprend 10 minutes de démo, un parcours du code et une discussion sur les évolutions : CMS headless, autres fiches produit, localisation.
-- Points de vigilance à préparer pour l'appel : frontière serveur/client, encapsulation des librairies, couche de données, et compromis entre l'animation du hero et le score Lighthouse.
+- The Figma can be read with a signed-in session, but export, copying and sharing are disabled. The Figma API returns a 403 « File not exportable » error, and the MCP server also refuses access. Values are therefore read by hand in the interface, without working around this restriction.
+- The 47 images and logos provided are in the `Octopus_assets` folder. Icons are not included: Sabrina emails Octopus to ask for them, and Lucide stands in meanwhile.
+- Every assumption is noted in the README, as the brief asks.
+- Priority order: the 10 acceptance criteria first, polish second. Fidelity and responsive behaviour weigh 25 % each, code and components 20 %, performance and accessibility 15 %, tests and documentation 15 %.
+- The 45-minute review call includes a 10-minute demo, a code walkthrough and a discussion of how to extend the site: headless CMS, more product pages, localisation.
+- Points to prepare for the call: the server/client boundary, library encapsulation, the data layer, and the trade-off between the hero animation and the Lighthouse score.
