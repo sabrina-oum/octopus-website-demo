@@ -181,6 +181,14 @@ export const photoCropsSchema = z.object({
   backdrop: hexColorSchema,
 });
 
+/** A card's own name or short description, when the product has a different text on the home page */
+const cardTextSchema = z.strictObject({
+  name: z.string().min(1).optional(),
+  shortDescription: z.string().min(1).optional(),
+});
+
+const cardTextsSchema = z.record(productIdSchema, cardTextSchema);
+
 const featuredSectionSchema = z.object({
   layout: z.enum(["featured-above", "featured-beside"]),
   category: categoryIdSchema,
@@ -188,6 +196,7 @@ const featuredSectionSchema = z.object({
   featured: productIdSchema,
   image: photoCropsSchema,
   products: z.array(productIdSchema),
+  cardText: cardTextsSchema.optional(),
 });
 
 const bannerSectionSchema = z.object({
@@ -195,6 +204,7 @@ const bannerSectionSchema = z.object({
   category: categoryIdSchema,
   featured: productIdSchema,
   image: photoCropsSchema,
+  cardText: cardTextsSchema.optional(),
 });
 
 const cardsSectionSchema = z.object({
@@ -202,6 +212,7 @@ const cardsSectionSchema = z.object({
   category: categoryIdSchema,
   subheading: z.string().min(1),
   products: z.array(productIdSchema).min(1),
+  cardText: cardTextsSchema.optional(),
 });
 
 export const categorySectionSchema = z.discriminatedUnion("layout", [
@@ -256,6 +267,7 @@ export type Product = Omit<ProductContent, "category"> & {
   category: Category;
   href: string;
 };
+export type CardTexts = z.infer<typeof cardTextsSchema>;
 export type HeroContent = z.infer<typeof heroSchema>;
 export type HeroVideo = z.infer<typeof heroVideoSchema>;
 export type Homepage = z.infer<typeof homepageSchema>;

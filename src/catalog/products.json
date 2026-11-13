@@ -4,7 +4,7 @@
     "slug": "countertop-blender",
     "name": "Octopus Countertop Blender",
     "category": "kitchen",
-    "shortDescription": "A powerful blender for smoothies, soups and crushed ice.",
+    "shortDescription": "A powerful blender that crushes ice and blends smooth with seven presets",
     "image": "/images/products/countertop-blender.png",
     "bestSeller": false,
     "description": "The Octopus Countertop Blender has the power for daily smoothies and tougher jobs alike. A 1500W motor and seven presets handle most of the work, and a one-touch clean cycle rinses the jug so you don't have to.",
@@ -22,7 +22,7 @@
       {
         "type": "photo",
         "image": {
-          "src": "/images/products/countertop-blender.png",
+          "src": "/images/products/placeholder.png",
           "alt": "The Octopus Countertop Blender in black"
         }
       },
@@ -33,7 +33,7 @@
             "title": "Powers through the tough stuff",
             "description": "A 1500W motor lets you do anything from crushing ice to blending smoothies",
             "image": {
-              "src": "/images/products/countertop-blender.png",
+              "src": "/images/products/placeholder.png",
               "alt": ""
             }
           },
@@ -41,7 +41,7 @@
             "title": "Skip the scrubbing",
             "description": "Add water and a little detergent, press clean, and the blender cleans itself",
             "image": {
-              "src": "/images/products/countertop-blender.png",
+              "src": "/images/products/placeholder.png",
               "alt": ""
             }
           },
@@ -49,7 +49,7 @@
             "title": "Control in short bursts",
             "description": "The pulse function runs the blades in bursts, giving you even more control",
             "image": {
-              "src": "/images/products/countertop-blender.png",
+              "src": "/images/products/placeholder.png",
               "alt": ""
             }
           },
@@ -57,7 +57,7 @@
             "title": "A preset for the everyday",
             "description": "Seven intelligent presets for smoothies, soups, purées & more",
             "image": {
-              "src": "/images/products/countertop-blender.png",
+              "src": "/images/products/placeholder.png",
               "alt": ""
             }
           }
@@ -66,7 +66,7 @@
       {
         "type": "photo",
         "image": {
-          "src": "/images/products/countertop-blender.png",
+          "src": "/images/products/placeholder.png",
           "alt": "The Octopus Countertop Blender, seen from the front"
         }
       }
@@ -134,7 +134,7 @@
     "slug": "air-fryer-5-7l",
     "name": "Octopus Air Fryer 5.7 L",
     "category": "kitchen",
-    "shortDescription": "A 5.7 L air fryer that cooks meals quickly and evenly, with 2200W and dual heaters",
+    "shortDescription": "A 5.7 L air fryer that cooks a full family meal quickly and evenly, with 2200W and dual heaters",
     "image": "/images/products/air-fryer-5-7l.png",
     "bestSeller": true,
     "description": "The Octopus Air Fryer 5.7 L cooks meals for the whole family with little to no oil. Its 2200W element and dual heaters cook quickly and evenly, so food comes out crisp all over.",

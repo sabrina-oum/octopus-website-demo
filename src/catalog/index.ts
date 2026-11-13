@@ -7,6 +7,7 @@ import {
   categoriesSchema,
   homepageSchema,
   productsSchema,
+  type CardTexts,
   type Category,
   type CategorySectionContent,
   type CategorySectionData,
@@ -99,6 +100,22 @@ export async function getProducts(): Promise<Product[]> {
   return parseProducts(productsJson, await getCategories());
 }
 
+function withCardText(
+  shown: Product[],
+  cardText: CardTexts | undefined,
+  place: string,
+): Product[] {
+  for (const id of Object.keys(cardText ?? {})) {
+    if (!shown.some((product) => product.id === id)) {
+      throw new Error(
+        `Card text for product "${id}" but ${place} does not show it`,
+      );
+    }
+  }
+
+  return shown.map((product) => ({ ...product, ...cardText?.[product.id] }));
+}
+
 export async function getBestSellers(): Promise<Product[]> {
   const products = await getProducts();
 
@@ -159,21 +176,48 @@ function buildCategorySection(
   categories: Category[],
 ): CategorySectionData {
   const category = findCategory(section.category, categories);
-  const find = (id: string) => findProduct(id, section.category, products);
+  const place = `the ${section.category} section`;
+  const find = (ids: string[]) =>
+    withCardText(
+      ids.map((id) => findProduct(id, section.category, products)),
+      section.cardText,
+      place,
+    );
 
   switch (section.layout) {
     case "featured-above":
-    case "featured-beside":
+    case "featured-beside": {
+      const [featured, ...listed] = find([
+        section.featured,
+        ...section.products,
+      ]);
+
       return {
-        ...section,
+        layout: section.layout,
         category,
-        featured: find(section.featured),
-        products: section.products.map(find),
+        subheading: section.subheading,
+        featured,
+        image: section.image,
+        products: listed,
       };
-    case "banner":
-      return { ...section, category, featured: find(section.featured) };
+    }
+    case "banner": {
+      const [featured] = find([section.featured]);
+
+      return {
+        layout: section.layout,
+        category,
+        featured,
+        image: section.image,
+      };
+    }
     case "cards":
-      return { ...section, category, products: section.products.map(find) };
+      return {
+        layout: section.layout,
+        category,
+        subheading: section.subheading,
+        products: find(section.products),
+      };
   }
 }
 

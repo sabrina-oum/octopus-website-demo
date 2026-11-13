@@ -30,7 +30,13 @@
         "alt": "A woman blending a strawberry smoothie with the Octopus Blender on a wooden counter",
         "backdrop": "#DCCBB8"
       },
-      "products": ["kettle", "countertop-blender"]
+      "products": ["kettle", "countertop-blender"],
+      "cardText": {
+        "kettle": { "name": "Octopus Kettle 1.7 L" },
+        "personal-blender": {
+          "shortDescription": "A portable blender that blends straight into a cup you can take with you"
+        }
+      }
     },
     {
       "layout": "banner",
@@ -42,6 +48,11 @@
         "desktop": "/images/banners/ionic-hair-dryer-desktop.jpg",
         "alt": "A woman drying her hair with the Octopus Ionic Hair Dryer",
         "backdrop": "#E1C5AF"
+      },
+      "cardText": {
+        "ionic-hair-dryer": {
+          "shortDescription": "Dry your hair faster and with less frizz with this powerful ionic hair dryer"
+        }
       }
     },
     {
