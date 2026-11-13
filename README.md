@@ -1,9 +1,9 @@
 # octopus-website-demo
 
-A demo of two pages of the Octopus website, the Homepage and the Countertop Blender product page, built from the Figma « Flows » at three breakpoints.
+Two pages of the Octopus website, the Homepage and the Countertop Blender product page, built from the Figma « Flows » at three breakpoints.
 
 - Live demo: https://octopus-website-demo-six.vercel.app
-- Lighthouse reports (mobile): _to add_
+- Lighthouse reports (mobile): [Homepage](lighthouse/homepage-mobile.html), [product page](lighthouse/product-page-mobile.html)
 
 ## Setup
 
@@ -24,67 +24,60 @@ Before the first `yarn test`, install the Playwright browser: `yarn playwright i
 
 ## Architecture
 
-Next.js 16 (App Router, static pages), React 19, TypeScript, Tailwind CSS 4. The full picture is in [architecture.md](architecture.md).
+Next.js 16 (App Router, static pages), React 19, TypeScript, Tailwind CSS 4. Details in [architecture.md](architecture.md).
 
-- **`src/app`**: the routes: `/`, `/products/[slug]` and a `/coming-soon` placeholder for links outside the two pages.
-- **`src/catalog`**: the content. `products.json` holds every product and the content of its page in one entry, the way a CMS product type would: what the cards show (name, category, photo…), what its page shows (description, colours, a gallery of photo and feature-card blocks in page order, specifications and downloads) and an optional SEO override, field by field, that falls back to the product's name, short description and the site's share image. `homepage.json` holds the Homepage hero, SEO, sections, category tiles and « Find us at » banner. Zod schemas validate them at build time, so bad content fails the build with the path of the error. Pages read content only through the functions of `index.ts`.
-- **`src/components`**: the UI, one component per Figma component: `Button`, `ProductCard`, `Carousel`, `SectionHeader`, `Header`, `Footer`… The same components serve both pages.
-- **`src/app/globals.css`**: the design tokens from Figma (colors, type scale, spacing, breakpoints), defined once in the Tailwind theme.
+- **`src/app`**: the routes `/`, `/products/[slug]` and a `/coming-soon` placeholder for links outside the two pages.
+- **`src/catalog`**: the content. `products.json` holds one record per product, like a CMS product type: what its card shows, what its page shows (description, colours, gallery, specifications, downloads) and optional SEO overrides. `homepage.json` holds the Homepage hero, SEO and sections. Zod schemas validate both at build time, so bad content fails the build with the path of the error. Pages read content only through `index.ts`.
+- **`src/components`**: one component per Figma component (`Button`, `ProductCard`, `Carousel`, `SectionHeader`, `Accordion`, `Header`, `Footer`…), shared by both pages.
+- **`src/app/globals.css`**: the Figma design tokens (colors, type scale, spacing, breakpoints), defined once in the Tailwind theme.
 
-Libraries: Embla for the carousel (swipe, snapping), Radix Dialog for the mobile menu (focus trap, Escape), Radix Accordion for the specifications, Lucide for the icons, `next/image` for responsive, lazy images.
+Libraries: Embla (carousel swipe and snapping), Radix Dialog (mobile menu: focus trap, Escape), Radix Accordion (specifications), Lucide (icons), `next/image` (responsive, lazy images).
 
 ## Trade-offs
 
-- **Curated Homepage.** Each section of `homepage.json` lists the product ids it shows. A new product appears once its id is added to a section, with no markup change. Showing every product of a category automatically would fill the Homepage as the catalog grows.
-- **Content checked at build.** Product ids are checked against the product list and their category, so a typo fails the build instead of shipping an empty card.
-- **Static pages.** Both pages are prerendered. Moving to a CMS would replace the JSON reads in `src/catalog/index.ts`; the components would not change.
-- **Images.** Category photos are art-directed (one crop per breakpoint, with `<picture>`). Every image sits in a box of known size, so loading causes no layout shift.
+- **Curated category sections.** The brief asks that adding a product to the data be enough to show it. That holds for « Best sellers », which shows every product marked `bestSeller`. Each category section instead lists its products in `homepage.json`, so a new product also needs its id added there. In return, each section keeps its Figma layout (one large card, a fixed number of smaller ones) and the Homepage doesn't grow with the catalog.
+- **Content checked at build.** Zod validates the JSON and checks every product id against the product list and its category, so a typo fails the build instead of shipping an empty card. The cost: one content error blocks the whole deploy.
+- **Static pages.** Both pages are prerendered, so they are fast and simple to host. The cost: a content change needs a rebuild. Moving to a CMS would replace the JSON reads in `src/catalog/index.ts` and add on-demand revalidation; the components would not change.
 
 ## Assumptions
 
 The Figma file has export disabled: values were read in its Properties panel.
 
-- **Header below 1200 px.** The Figma tablet frames show the full navigation; the brief asks for a menu below 1200 px, so tablet uses the menu.
-- **Focus ring.** Drawn at full opacity instead of the Figma 35 %, which fails WCAG AA contrast.
-- **Hero video.** The video files were not provided; the hero shows a gray gradient. Adding a `video` entry to `homepage.json` switches it to the video.
-- **Category photos.** The Figma lifestyle photos were not provided. The « Category » photos take their place, and the large card features the product in the photo: the Octopus Blender for Kitchen, the Video Doorbell for Home Security. The product the Figma puts in the large card moves to a medium card instead, as a section shows each product once: the medium cards are the Kettle and the Countertop Blender (Figma: the Blender and the Countertop Blender), and the Indoor and Outdoor Cameras (Figma: the Outdoor Camera and the Video Doorbell).
-- **Text over photos.** These photos have no empty wall behind the text, so the text sits on a band in the photo's own color.
-- **Carousel dots.** Figma shows arrows only; the dots asked for by the brief sit left of the arrows.
-- **Icons and font.** Octopus icons were not provided: Lucide icons stand in. The font is Satoshi, self-hosted.
-- **Section spacing.** Figma varies it (60 to 180 px on desktop); the four category sections share the same spacing. « Explore all categories » follows its Figma values.
-- **Product pages.** Every product has its page, built from the same template at `/products/[slug]`, and every card links to its own product. Figma designs only the Countertop Blender's page: the other products' descriptions and colours were written from their short descriptions and photos, and their pages share the site's image when shared.
-- **Product colours.** The Figma shows the Countertop Blender in black, with a second, hidden white swatch: the data lists Black and White so the selector has a choice. The photo stays the same, as no white photo was provided.
-- **Card text.** The Figma gives some products other words on the Homepage than on the product page. « Best sellers » shows each product's own content on every page, as it would from a CMS, so the Figma Homepage's Air Fryer and Hair Dryer descriptions there are not used. The category sections are curated, so `homepage.json` can give a section's cards their own words through `cardText` (the Kettle's name, the Blender's description, the Hair Dryer banner). Card text for a product the section does not show fails the build.
-- **Best sellers order.** The Figma product page lists « Best sellers » in another order: Hair Dryer, Blender, Air Fryer, Camera, Kettle. Best sellers is one ranking, so every page shows it in the same order, the order of the products in `products.json`.
-- **Product name.** The data said « Countertop Blender »; it now says « Octopus Countertop Blender », as in the Figma and like every other product.
-- **Product hero.** On the desktop frame the description overlaps « Colour - Black »; the tablet frame and the Design System stack them, so the page stacks them.
-- **« Where to buy » on mobile.** Fixed at the bottom of the screen to the end of the page, as in Figma. The page leaves the bar's height free under the footer, so the bar never hides it. The store locator is not built; it leads to « Coming soon ».
-- **Product Open Graph image.** Made from the product photo on the card grey, at 1200 × 630.
-- **Gallery and feature cards.** Their Figma photos were not provided and the file is not exportable. Only the product photo at the top of the page is accurate: the two gallery photos and the four feature-card photos use a placeholder picture, `placeholder.png`, rather than the same cutout repeated. Each feature card shows its text, then its image under it, so the text never covers it; a feature image takes an empty alt, as its title already says what it shows.
-- **Downloads.** The ticket lists Downloads with the foldable sections; the Figma draws it as a separate card that does not fold, so the page follows the Figma.
-- **User manual.** The manual was not provided: the link opens, in a new tab, a one-page PDF made from the product's specifications, which says so.
-- **Category tiles.** Category pages are not built, so every tile leads to « Coming soon », like the category links of the header and footer. The photos are decorative (the label names the link). Accessories uses the provided cable photo, which is not a catalog product.
-- **« Find us at » banner.** The Warehouse logo was not provided and the Figma file is not exportable: it is redrawn as text and an SVG badge, at the Figma size. The store locator is not built; its button leads to « Coming soon ». The focus ring is white on this red banner, as the blue one would not show.
+- **Missing assets.** Hero video: a gray gradient, replaced by the video once a `video` entry is added to `homepage.json`. Gallery and feature-card photos: a neutral `placeholder.png`. Icons: Lucide. The Warehouse logo: redrawn as text and an SVG badge at the Figma size. User manual: a one-page PDF made from the specifications, which says so.
+- **Focus ring.** Full opacity instead of the Figma 35 %, which fails WCAG AA contrast; white on the red « Find us at » banner, where blue would not show.
+- **Category photos.** The « Category » photos replace the missing lifestyle photos, so the large card shows the product in the photo (the Octopus Blender for Kitchen, the Video Doorbell for Home Security) and the product Figma puts there moves to a medium card. These photos have no empty wall behind the text, so it sits on a band in the photo's color.
+- **Space between sections.** Every category section has the same space above and below it (120 px on desktop). Figma varies it: on desktop it leaves 180 px around the Hair Care banner, where the page has 120 px, and 120 px between Best sellers and Kitchen, where the page has 180 px.
+- **Carousel dots.** Figma shows arrows only; the dots the brief asks for sit left of the arrows.
+- **Card text.** « Best sellers » shows each product's own content on every page, as it would from a CMS, so the Figma Homepage's other wording for the Air Fryer and Hair Dryer is not used there. Category sections can give a card its own words with `cardText` in `homepage.json`.
+- **Best sellers order.** One ranking on every page, the order of `products.json`; the Figma product page uses another order.
+- **Product pages.** Every card links to its own product, on the same template. Figma designs only the Countertop Blender: the other products' descriptions and colours were written from their short descriptions and photos.
+- **Product colours.** Figma shows the Countertop Blender in black with a hidden white swatch, so the selector offers Black and White. The photo does not change, as no white photo was provided.
+- **Out-of-scope links.** Category tiles, category links and the store locator lead to « Coming soon ». Accessories uses the provided cable photo, which is not a catalog product.
 
 ## With more time
 
-- Connect a headless CMS behind `src/catalog`, with remote images and on-demand revalidation.
-- Use the real hero video (with a pause control), lifestyle photos, gallery photos and Octopus icons.
-- Move the category labels from the code into the data.
-- Add visual regression tests per breakpoint, and Lighthouse in CI.
+- Add screenshot tests that compare each page at each breakpoint with an approved version, so a layout change is caught.
+- Run the tests and Lighthouse automatically on every push (GitHub Actions), so a failing test or a score under 90 is caught before deploying.
 
 ## Use of AI tools
 
-Built with Claude Code. It wrote the code and tests from tickets I wrote, read the Figma values through Claude in Chrome, and checked layouts in the browser. I reviewed every change and made every commit.
+I used Claude Code for the whole project, in this order:
+
+1. **Requirements.** I turned the brief into requirements with Claude, [docs/SPEC.md](docs/SPEC.md).
+2. **Tickets.** Claude split those requirements into tickets with acceptance criteria, [docs/tickets](docs/tickets).
+3. **Architecture.** I guided Claude to define the code architecture, [architecture.md](architecture.md).
+4. **Implementation.** Claude Code then implemented the tickets one by one, code and tests.
+5. **Review.** I reviewed each ticket, asked for changes when needed, and made every commit myself.
+
+For design fidelity, it read the Figma values through Claude in Chrome, as export is disabled, and checked layouts in the browser.
 
 Where I corrected it:
 
-- It split each product into two content types and sent cards with no page content to « Coming soon »; as a CMS will come later, I had each product made one record, with one `Product` type and every card linking to its own page.
+- It split each product into two content types and sent cards with no page content to « Coming soon »; as a CMS will come later, I had each product made one record, with every card linking to its own page.
 - It showed every product of a category on the Homepage; I asked for curated sections.
-- Its end-to-end tests hard-coded product names and copy; as the content will come from a CMS, I had them read it from the page.
-- Its code had long comments and clever generic types; I had it simplified to plain types and short comments.
-- It said The Warehouse logo matched Figma; I had it compare them side by side, which showed errors in the badge and the wordmark.
-- It added a « Special » button style and a product description that the visible Figma doesn't have; I had both removed.
-- It kept the gallery and feature cards at a 3:4 ratio at every width, which left a large gap at 746 px; I had it use the Figma width and height.
-
-I also had smaller mismatches with Figma fixed: a resized category card, an offset Best sellers photo, the mobile « Where to buy » bar, text covering the product in two photos, and photo fades that didn't match the photos.
+- Its end-to-end tests hard-coded product names and copy; I had them read the content from the page.
+- Its code had long comments and clever generic types; I had it simplified.
+- It said The Warehouse logo matched Figma; a side-by-side comparison showed errors in the badge and wordmark.
+- It added a button style and a product description that the Figma doesn't have; I had both removed.
+- It kept the gallery and feature cards at 3:4 at every width, which left a large gap at 746 px; I had it use the Figma sizes.
+- Smaller Figma mismatches: a resized category card, an offset Best sellers photo, the mobile « Where to buy » bar, text covering the product in two photos, photo fades that didn't match the photos.

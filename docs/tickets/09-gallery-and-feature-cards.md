@@ -16,3 +16,4 @@
 ## Update of 12 November
 
 - The gallery photos were not provided: the product cutout stands in for all six, at the Figma sizes. Each feature card therefore places its text above the image (assumption noted in the README).
+- Since then, `placeholder.png` replaced the cutout, so each feature card follows the Figma again: the photo fills the card and the text sits on top of it.
