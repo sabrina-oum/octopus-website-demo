@@ -3,7 +3,7 @@
 Two pages of the Octopus website, the Homepage and the Countertop Blender product page, built from the Figma « Flows » at three breakpoints.
 
 - Live demo: https://octopus-website-demo-six.vercel.app
-- Lighthouse reports (mobile): [Homepage](lighthouse/homepage-mobile.html), [product page](lighthouse/product-page-mobile.html)
+- Lighthouse reports (mobile): [Homepage](lighthouse/homepage-mobile.png), [product page](lighthouse/product-page-mobile.png)
 
 ## Setup
 
